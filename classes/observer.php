@@ -25,7 +25,9 @@
 namespace local_moodlexhub;
 
 use core\event\course_deleted;
+use core\event\course_module_deleted;
 use local_moodlexhub\enrol\imports;
+use local_moodlexhub\privacy\followup_records;
 use local_moodlexhub\privacy\owned_records;
 use local_moodlexhub\quality\auditor;
 use local_moodlexhub\report\snapshots;
@@ -44,6 +46,16 @@ final class observer {
         $DB->delete_records(auditor::TABLE, ['courseid' => $event->objectid]);
         imports::delete_course_data($event->objectid);
         owned_records::delete_course($event->objectid);
+        followup_records::delete('courseid = :courseid', ['courseid' => $event->objectid]);
         $DB->delete_records(snapshots::TABLE, ['courseid' => $event->objectid]);
+    }
+
+    /**
+     * Remove follow-up cases for a deleted activity.
+     *
+     * @param course_module_deleted $event Module deletion event.
+     */
+    public static function course_module_deleted(course_module_deleted $event): void {
+        followup_records::delete('cmid = :cmid', ['cmid' => $event->objectid]);
     }
 }

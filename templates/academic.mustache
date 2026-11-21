@@ -12,6 +12,7 @@
     <div class="moodlexhub-actions">
         <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
         {{#feedbackurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} feedback, local_moodlexhub {{/str}}</a>{{/feedbackurl}}
+        {{#followupurl}}<a class="btn btn-outline-primary" href="{{.}}">{{#str}} followup, local_moodlexhub {{/str}}</a>{{/followupurl}}
         {{#categoryurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} categoryanalytics, local_moodlexhub {{/str}}</a>{{/categoryurl}}
     </div>
     <form class="moodlexhub-filters" method="get" action="{{chooseurl}}">

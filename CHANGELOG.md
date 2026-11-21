@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-beta.4
+
+- Añade seguimiento académico por curso y grupo con revisión de acceso reciente, Tareas, cuestionarios y finalización de foros.
+- Incorpora colas de casos abiertos y cerrados, asignación voluntaria, intervenciones e historial.
+- Añade controles de ámbito de actividad, privacidad de calificación, perfiles y eliminación de datos.
+
 ## 0.1.0-beta.3
 
 - Corrige la aplicación del modo de grupos separados cuando Moodle devuelve el valor como texto.

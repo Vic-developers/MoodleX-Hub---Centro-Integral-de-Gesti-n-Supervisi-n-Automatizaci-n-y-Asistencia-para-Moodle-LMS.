@@ -137,6 +137,8 @@ echo $OUTPUT->render_from_template('local_moodlexhub/academic', [
     'scoped' => (bool) $course,
     'chart' => $chart,
     'teacher' => $view === 'teacher',
+    'followupurl' => $view === 'teacher' && $course && has_capability(\local_moodlexhub\academic\followup::CAPABILITY, $context)
+        ? (new moodle_url('/local/moodlexhub/followup.php', ['id' => $course->id, 'group' => max(0, $group)]))->out(false) : null,
     'feedbackurl' => $course && \local_moodlexhub\module_config::enabled('feedback')
         && has_all_capabilities(['local/moodlexhub:managefeedback', 'mod/assign:grade'], $context)
         ? (new moodle_url('/local/moodlexhub/feedback.php', ['id' => $course->id]))->out(false) : null,

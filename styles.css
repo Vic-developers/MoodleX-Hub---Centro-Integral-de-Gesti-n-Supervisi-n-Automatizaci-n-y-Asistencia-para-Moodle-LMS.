@@ -108,6 +108,11 @@
     font-variant-numeric: tabular-nums;
 }
 
+.moodlexhub-followup-note {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 768px) {
     .moodlexhub-dashboard {
         grid-template-columns: minmax(0, 1fr);

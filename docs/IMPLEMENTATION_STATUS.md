@@ -1,6 +1,6 @@
 # Estado de implementación
 
-Fase actual de validación y distribución de `0.1.0-beta.3`. El código contiene flujos funcionales en los 17 módulos. La guía de uso describe las operaciones disponibles y los resultados identifican las pruebas ejecutadas por compilación.
+Fase actual de validación de `0.1.0-beta.4`. El código contiene flujos funcionales en los 17 módulos. La guía de uso describe las operaciones disponibles y los resultados identifican las pruebas ejecutadas por compilación.
 
 | Módulo | Alcance presente |
 |---|---|
@@ -11,7 +11,7 @@ Fase actual de validación y distribución de `0.1.0-beta.3`. El código contien
 | Analítica | Indicadores de acceso y finalización, comparación de eventos, informes por curso y categoría. |
 | Calificaciones | Diagnóstico de estructura y avisos, con histórico de resúmenes. |
 | Almacenamiento | Análisis asíncrono, clasificación, deduplicación, referencias, historial y vista por categoría. |
-| Docentes | Panel por curso y grupo, participantes, próximas fechas de actividades y carga de Tareas. |
+| Docentes | Panel por curso y grupo, próximas fechas, carga de Tareas y seguimiento individual de acceso, Tareas, cuestionarios y foros con fecha esperada. |
 | Estudiantes | Calendario, plazos, finalización, favoritos, notas privadas y recordatorios personales. |
 | Soporte | Artículos, preguntas frecuentes, tutoriales, tickets, adjuntos, estados, historial y notificaciones. |
 | Preguntas | Filtros por banco, categoría, tipo y autor, última versión y referencias directas autorizadas. |

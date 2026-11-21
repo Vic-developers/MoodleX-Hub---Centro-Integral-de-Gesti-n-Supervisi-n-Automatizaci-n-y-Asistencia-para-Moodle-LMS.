@@ -28,6 +28,7 @@ El prefijo de todas las capacidades de la tabla es `local/moodlexhub:`.
 | Usuarios y matrículas | `viewusers` en el sitio. El CSV requiere `bulkenrolusers` en el curso y permisos nativos para el método de matrícula y el rol elegido. |
 | Calidad | `auditcourses` y capacidad nativa de actualización en el curso. `managequalityrules` permite definir pesos y retención. |
 | Analítica y docencia | `viewanalytics` o `viewteacher` y acceso nativo a participantes en el curso. Los gráficos, la finalización y el trabajo de calificación aplican sus permisos Moodle respectivos. |
+| Seguimiento académico | `managefollowup` junto con `viewteacher` y acceso a participantes. Se aplica el grupo del curso, los permisos del módulo y la visibilidad de cada actividad. La asignación es voluntaria y la persona responsable puede liberarla. |
 | Calificaciones, almacenamiento y banco | `viewgradesdiagnostics`, `viewstorage` o `viewquestions` en el curso. Cada controlador aplica además las capacidades del origen de datos. |
 | Planificador y soporte | `viewstudent` y `usesupport` en el sitio. El acceso al ticket depende del solicitante, de la asignación o de `managetickets`. |
 | Supervisión, automatización y asistente | `viewmonitoring`, `manageautomation`, `useassistant` o `manageai`, según la operación. Las automatizaciones vuelven a comprobar las capacidades al ejecutar. |

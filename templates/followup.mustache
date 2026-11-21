@@ -1,0 +1,150 @@
+{{!
+    @template local_moodlexhub/followup
+
+    Example context (json):
+    {"overview": true, "courseid": 2, "action": "/local/moodlexhub/followup.php"}
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{teacherurl}}">{{#str}} teacherpanel, local_moodlexhub {{/str}}</a>
+        {{#detail}}<a class="btn btn-outline-secondary" href="{{backurl}}">{{#str}} followup, local_moodlexhub {{/str}}</a>{{/detail}}
+    </div>
+    {{#overview}}
+        <form class="moodlexhub-filters" method="get" action="{{action}}">
+            <input type="hidden" name="id" value="{{courseid}}">
+            <div>
+                <label for="hub-follow-view">{{#str}} followupview, local_moodlexhub {{/str}}</label>
+                <select class="form-select" id="hub-follow-view" name="view">
+                    {{#views}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/views}}
+                </select>
+            </div>
+            {{#hasgroups}}
+                <div>
+                    <label for="hub-follow-group">{{#str}} group {{/str}}</label>
+                    <select class="form-select" id="hub-follow-group" name="group">
+                        {{#groups}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/groups}}
+                    </select>
+                </div>
+            {{/hasgroups}}
+            <div>
+                <label for="hub-follow-activity">{{#str}} activity {{/str}}</label>
+                <select class="form-select" id="hub-follow-activity" name="cmid">
+                    {{#options}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/options}}
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+        </form>
+        {{#selectedactivityurl}}
+            <p><a href="{{.}}">{{#str}} followupopenactivity, local_moodlexhub {{/str}}</a></p>
+        {{/selectedactivityurl}}
+        {{#queueview}}
+            {{^hasqueue}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasqueue}}
+            {{#hasqueue}}
+                <ul class="list-group">
+                    {{#queued}}
+                        <li class="list-group-item">
+                            <a href="{{url}}">{{name}} · {{activity}}</a>
+                            <div>{{reason}} · {{time}}</div>
+                        </li>
+                    {{/queued}}
+                </ul>
+            {{/hasqueue}}
+        {{/queueview}}
+        {{#evidenceview}}
+        <p>{{#str}} followuphelp, local_moodlexhub {{/str}}</p>
+        {{^hasrows}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasrows}}
+        {{#hasrows}}
+            <div class="table-responsive">
+                <table class="table">
+                    <caption>{{#str}} followuplearners, local_moodlexhub {{/str}}</caption>
+                    <thead><tr>
+                        <th scope="col">{{#str}} fullname {{/str}}</th>
+                        <th scope="col">{{#str}} academiclastaccess, local_moodlexhub {{/str}}</th>
+                        <th scope="col">{{#str}} followupevidence, local_moodlexhub {{/str}}</th>
+                        <th scope="col">{{#str}} followup, local_moodlexhub {{/str}}</th>
+                    </tr></thead>
+                    <tbody>
+                        {{#rows}}
+                            <tr>
+                                <th scope="row">{{name}}</th>
+                                <td>{{lastaccess}}</td>
+                                <td>{{state}}{{#due}} · {{due}}{{/due}}</td>
+                                <td>
+                                    {{#cases}}<div><a href="{{url}}">{{name}}</a></div>{{/cases}}
+                                    {{#canopen}}
+                                        <form action="{{posturl}}" method="post">
+                                            <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                            <input type="hidden" name="learner" value="{{userid}}">
+                                            <button class="btn btn-outline-primary" type="submit" name="operation" value="open">
+                                                {{#str}} followupopen, local_moodlexhub {{/str}}
+                                            </button>
+                                        </form>
+                                    {{/canopen}}
+                                </td>
+                            </tr>
+                        {{/rows}}
+                    </tbody>
+                </table>
+            </div>
+        {{/hasrows}}
+        {{/evidenceview}}
+    {{/overview}}
+    {{#detail}}
+        <section class="moodlexhub-panel">
+            <h2>{{learner}}</h2>
+            <p>{{reason}} · {{status}}{{#activity}} · <a href="{{activityurl}}">{{activity}}</a>{{/activity}}</p>
+            <p>{{#str}} followupassignee, local_moodlexhub {{/str}} · {{assignee}}</p>
+            {{#cantake}}
+                <form action="{{posturl}}" method="post">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="caseid" value="{{id}}">
+                    <button class="btn btn-outline-primary" type="submit" name="operation" value="take">
+                        {{#str}} followuptake, local_moodlexhub {{/str}}
+                    </button>
+                </form>
+            {{/cantake}}
+            {{#canrelease}}
+                <form action="{{posturl}}" method="post">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="caseid" value="{{id}}">
+                    <button class="btn btn-outline-secondary" type="submit" name="operation" value="release">
+                        {{#str}} followuprelease, local_moodlexhub {{/str}}
+                    </button>
+                </form>
+            {{/canrelease}}
+            <form action="{{posturl}}" method="post" class="mt-3">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="caseid" value="{{id}}">
+                <label for="hub-follow-note">{{#str}} followupnote, local_moodlexhub {{/str}}</label>
+                <textarea class="form-control" id="hub-follow-note" name="note" rows="4" maxlength="2000" required></textarea>
+                <div class="moodlexhub-actions mt-2">
+                    {{#open}}
+                        <button class="btn btn-primary" type="submit" name="operation" value="note">
+                            {{#str}} followupsave, local_moodlexhub {{/str}}
+                        </button>
+                        <button class="btn btn-outline-secondary" type="submit" name="operation" value="close">
+                            {{#str}} followupclose, local_moodlexhub {{/str}}
+                        </button>
+                    {{/open}}
+                    {{^open}}
+                        <button class="btn btn-primary" type="submit" name="operation" value="reopen">
+                            {{#str}} followupreopen, local_moodlexhub {{/str}}
+                        </button>
+                    {{/open}}
+                </div>
+            </form>
+        </section>
+        <section class="moodlexhub-panel">
+            <h2>{{#str}} monitorhistory, local_moodlexhub {{/str}}</h2>
+            <ol>
+                {{#history}}
+                    <li>
+                        <strong>{{action}}</strong> · {{actor}} · {{time}}
+                        {{#note}}<p class="moodlexhub-followup-note">{{note}}</p>{{/note}}
+                    </li>
+                {{/history}}
+            </ol>
+        </section>
+    {{/detail}}
+    {{{pager}}}
+</div>

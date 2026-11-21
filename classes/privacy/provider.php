@@ -55,6 +55,7 @@ use local_moodlexhub\support\privacy as ticket_privacy;
 final class provider implements core_userlist_provider, metadata_provider, plugin_provider, user_preference_provider {
     #[\Override]
     public static function get_metadata(collection $collection): collection {
+        followup_records::describe($collection);
         foreach (dashboard::PREFERENCES as $name) {
             $collection->add_user_preference('local_moodlexhub_' . $name, 'privacy:metadata:' . $name);
         }
@@ -111,6 +112,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
     #[\Override]
     public static function get_contexts_for_userid(int $userid): contextlist {
         $contexts = new contextlist();
+        followup_records::contexts($contexts, $userid);
         $contexts->add_from_sql(
             'SELECT DISTINCT ctx.id
                FROM {context} ctx
@@ -155,6 +157,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
             favourites_privacy::add_userids_for_context($userlist, planner::FAVOURITE);
         }
         if ($context instanceof context_course) {
+            followup_records::users($userlist, $context->instanceid);
             favourites_privacy::add_userids_for_context($userlist, library::FAVOURITE);
             $userlist->add_from_sql(
                 'userid',
@@ -231,6 +234,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
             }
             import_privacy::export($context, (int) $contextlist->get_user()->id);
             owned_records::export_feedback($context, $userid);
+            followup_records::export($context, $userid);
             $records = $DB->get_recordset(auditor::TABLE, [
                 'courseid' => $context->instanceid,
                 'userid' => $contextlist->get_user()->id,
@@ -267,6 +271,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
         if ($context instanceof context_course) {
             favourites_privacy::delete_favourites_for_all_users($context, 'local_moodlexhub', library::FAVOURITE);
             owned_records::delete_course($context->instanceid);
+            followup_records::delete('courseid = :courseid', ['courseid' => $context->instanceid]);
             $DB->delete_records(auditor::TABLE, ['courseid' => $context->instanceid]);
             imports::delete_course_data($context->instanceid);
         }
@@ -289,6 +294,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
                 $DB->delete_records(assistant::TABLE, ['userid' => $context->instanceid]);
             }
             if ($context instanceof context_course) {
+                followup_records::delete_users($context->instanceid, [(int) $contextlist->get_user()->id]);
                 owned_records::delete_feedback(['courseid' => $context->instanceid, 'userid' => $contextlist->get_user()->id]);
                 import_privacy::anonymise($context, [(int) $contextlist->get_user()->id]);
                 $DB->set_field(auditor::TABLE, 'userid', null, [
@@ -315,6 +321,7 @@ final class provider implements core_userlist_provider, metadata_provider, plugi
             favourites_privacy::delete_favourites_for_userlist($userlist, planner::FAVOURITE);
         }
         if ($context instanceof context_course && $userlist->get_userids()) {
+            followup_records::delete_users($context->instanceid, $userlist->get_userids());
             favourites_privacy::delete_favourites_for_userlist($userlist, library::FAVOURITE);
             foreach ($userlist->get_userids() as $userid) {
                 owned_records::delete_feedback(['courseid' => $context->instanceid, 'userid' => $userid]);

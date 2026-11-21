@@ -27,3 +27,13 @@ El informe agrupa eventos registrados por Moodle. La disponibilidad depende de l
 | Próximas fechas | Hasta 25 fechas ofrecidas por las actividades visibles mediante la API nativa, ordenadas de menor a mayor. |
 
 Las métricas individuales de pendientes y por calificar se muestran como no aplicables para entregas en equipo. Moodle presenta sus detalles en la pantalla de calificación de la actividad.
+
+## Evidencia para seguimiento
+
+| Motivo posible | Evidencia |
+|---|---|
+| Sin acceso reciente | Moodle carece de un acceso registrado al curso dentro de los últimos 14 días. Incluye a quienes nunca han entrado, por lo que conviene revisar matrículas recientes antes de intervenir. |
+| Entrega vencida | No se ha entregado una Tarea individual con fecha efectiva vencida, o no se ha finalizado un cuestionario cuya fecha de cierre pasó. Se respetan las excepciones y extensiones aplicables. En foros, se compara el estado de finalización de Moodle con su fecha esperada. |
+| Calificación pendiente | Una entrega de Tarea sigue sin una calificación vigente, o un intento finalizado de cuestionario contiene preguntas pendientes de corrección manual. En cuestionarios se requiere permiso para ver los nombres en el informe de calificación manual. |
+
+La evidencia se vuelve a comprobar al abrir un caso. Se guarda un caso por estudiante, actividad y motivo en cada curso. El historial permanece disponible mientras el estudiante y la actividad sigan dentro del ámbito autorizado. Las Tareas en equipo y las Tareas con calificación ciega activa quedan fuera de la vista individual. El complemento usa [Moodle Activity completion API](https://moodledev.io/docs/5.2/apis/core/activitycompletion) para consultar el estado de finalización.

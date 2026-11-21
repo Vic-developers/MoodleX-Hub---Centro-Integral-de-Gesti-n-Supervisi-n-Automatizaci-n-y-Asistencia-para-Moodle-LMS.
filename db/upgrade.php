@@ -385,5 +385,44 @@ function xmldb_local_moodlexhub_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026112017, 'local', 'moodlexhub');
     }
 
+    if ($oldversion < 2026112021) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_moodlexhub_followup');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_field('cmid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('reason', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL, null, 'open');
+        $table->add_field('assignee', XMLDB_TYPE_INTEGER, '10');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('course', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+        $table->add_key('learner', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('assignee', XMLDB_KEY_FOREIGN, ['assignee'], 'user', ['id']);
+        $table->add_index('evidence', XMLDB_INDEX_UNIQUE, ['courseid', 'userid', 'cmid', 'reason']);
+        $table->add_index('activity', XMLDB_INDEX_NOTUNIQUE, ['cmid']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $table = new xmldb_table('local_moodlexhub_followlog');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+        $table->add_field('caseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_field('actorid', XMLDB_TYPE_INTEGER, '10');
+        $table->add_field('action', XMLDB_TYPE_CHAR, '16', null, XMLDB_NOTNULL);
+        $table->add_field('note', XMLDB_TYPE_TEXT);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('case', XMLDB_KEY_FOREIGN, ['caseid'], 'local_moodlexhub_followup', ['id']);
+        $table->add_key('actor', XMLDB_KEY_FOREIGN, ['actorid'], 'user', ['id']);
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2026112021, 'local', 'moodlexhub');
+    }
+
     return true;
 }

@@ -22,5 +22,7 @@ El esquema se define en `db/install.xml`. Las migraciones son incrementales y es
 | `local_moodlexhub_api_log` | Estado e intentos de entregas, sin credenciales ni cuerpo de respuesta. |
 | `local_moodlexhub_aud_batch` | Lotes de auditorías de una categoría y su estado. |
 | `local_moodlexhub_aud_row` | Estado y resultado por curso dentro del lote de auditoría. |
+| `local_moodlexhub_followup` | Caso único por curso, estudiante, actividad y motivo. Guarda su estado y responsable. |
+| `local_moodlexhub_followlog` | Historial de apertura, asignación, liberación, intervenciones y cambios de estado. |
 
 Los adjuntos de tickets se gestionan con el área privada `ticket_attachment` de File API. El panel almacena sus preferencias en Moodle. El planificador usa las APIs nativas de favoritos y calendario.
