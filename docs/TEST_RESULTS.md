@@ -27,4 +27,16 @@ Las suites cubren acceso y visibilidad del catálogo, reglas y lotes de auditor�
 - **Copia asíncrona, Moodle 5.3.1.** La ficha del plugin abrió el formulario nativo de copia de Moodle. La prueba ejecutó la tarea nativa de backup y restore, verificó que se creó un curso distinto y comprobó la categoría y la visibilidad de destino.
 - **GitHub Actions.** Pasaron PHPUnit, Behat, la instalación y la validación de XMLDB en Moodle 5.0.12, 5.1.9, 5.2.5 y 5.3.1. Pasaron también Moodle Code Checker y PHPDoc Checker en 5.3.1. Consulta la [matriz de la beta 2](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44891421793) y descarga el [artefacto con el ZIP instalable](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44891421793/artifacts/14702227718).
 
+## Beta 3
+
+La validación con un docente restringido detectó que Moodle podía devolver el modo de grupos como texto. La comparación estricta con la constante entera podía tratar un curso con grupos separados como un curso abierto a todos los grupos. La beta 3 corrige la comprobación en el panel, la ficha del curso, los informes y la automatización.
+
+- **Docencia.** El curso de prueba contiene dos grupos. El docente consulta a su estudiante y la carga de su grupo. El selector rechaza el otro grupo. El constructor de informes rechaza el resumen de todo el curso para esa cuenta.
+- **Coordinación.** Una cuenta sin privilegios de administración previsualiza, confirma y ejecuta una matrícula CSV. También audita un curso de su categoría. Fuera de la categoría carece de la capacidad de matrícula y la auditoría se rechaza.
+- **Soporte.** Un agente de soporte puede responder al ticket que le asignaron. La comprobación de acceso rechaza un ticket ajeno sin asignación.
+
+En los cuatro laboratorios se aplicó la actualización al ZIP de la beta 3 y se comprobó el esquema instalado. PHPUnit pasó con 23 pruebas y 98 aserciones por versión en Moodle 5.0.12, 5.1.9, 5.2.5 y 5.3.1, con PHP 8.3.37 y MariaDB 11.4.10. En el laboratorio Moodle 5.3.1, Behat pasó con 6 escenarios y 58 pasos.
+
+En GitHub Actions pasaron la instalación, la validación XMLDB, PHPUnit y Behat en las cuatro ramas. El trabajo de empaquetado generó el [ZIP instalable](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44894321392/artifacts/14703094535). Consulta los registros de la [matriz de la beta 3](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44894321392).
+
 Consulta los comandos en [TESTING.md](TESTING.md) y los criterios de distribución en [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
