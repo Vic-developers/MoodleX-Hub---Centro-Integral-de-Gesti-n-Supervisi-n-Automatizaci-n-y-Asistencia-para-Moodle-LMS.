@@ -1,0 +1,29 @@
+{{!
+    @template local_moodlexhub/integrations
+
+    Example context (json):
+    {"dashboardurl":"/local/moodlexhub/index.php","servicesurl":"/admin/settings.php?section=externalservices"}
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        <a class="btn btn-outline-secondary" href="{{servicesurl}}">{{#str}} apimanage, local_moodlexhub {{/str}}</a>
+        {{#eligible}}<a class="btn btn-primary" href="{{newurl}}">{{#str}} webhooknew, local_moodlexhub {{/str}}</a>{{/eligible}}
+    </div>
+    {{^eligible}}<p>{{#str}} webhookkeymissing, local_moodlexhub {{/str}}</p>{{/eligible}}
+    {{^enabled}}<p>{{#str}} webhookdisabled, local_moodlexhub {{/str}}</p>{{/enabled}}
+    <section class="moodlexhub-panel" aria-labelledby="moodlexhub-endpoints">
+        <h2 id="moodlexhub-endpoints">{{#str}} webhookendpoints, local_moodlexhub {{/str}}</h2>
+        {{#hasendpoints}}
+            <ul class="moodlexhub-list">{{#endpoints}}
+                <li>
+                    {{name}} · {{topic}} · {{status}}
+                    {{#editurl}}<a href="{{.}}">{{#str}} edit {{/str}}</a>{{/editurl}}
+                    <a href="{{logsurl}}">{{#str}} logs {{/str}}</a>
+                </li>
+            {{/endpoints}}</ul>
+        {{/hasendpoints}}
+        {{^hasendpoints}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasendpoints}}
+    </section>
+    {{#history}}{{> local_moodlexhub/report_table }}{{/history}}
+</div>

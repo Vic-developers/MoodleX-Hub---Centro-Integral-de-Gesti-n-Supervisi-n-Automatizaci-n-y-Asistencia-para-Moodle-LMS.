@@ -1,0 +1,8 @@
+.env
+.env.local
+/.idea/
+/.vscode/
+/artifacts/
+/vendor/
+/node_modules/
+/.phpunit.result.cache

@@ -1,0 +1,26 @@
+{{!
+    @template local_moodlexhub/search
+
+    Example context (json):
+    {"action":"/local/moodlexhub/search.php","query":"physics"}
+}}
+<div class="moodlexhub">
+    <div><a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a></div>
+    <form class="moodlexhub-filters" method="get" role="search" action="{{action}}">
+        <div>
+            <label for="moodlexhub-search">{{#str}} dashboardsearch, local_moodlexhub {{/str}}</label>
+            <input class="form-control" type="search" name="q" id="moodlexhub-search" value="{{query}}" required maxlength="200">
+        </div>
+        <button type="submit" class="btn btn-primary">{{#str}} search {{/str}}</button>
+    </form>
+    {{#groups}}
+        <section class="moodlexhub-panel">
+            <h2>{{name}}</h2>
+            {{#hasitems}}
+                <ul>{{#items}}<li><a href="{{url}}">{{name}}</a></li>{{/items}}</ul>
+            {{/hasitems}}
+            {{^hasitems}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasitems}}
+            <a href="{{more}}">{{#str}} dashboardsearchmore, local_moodlexhub {{/str}}</a>
+        </section>
+    {{/groups}}
+</div>

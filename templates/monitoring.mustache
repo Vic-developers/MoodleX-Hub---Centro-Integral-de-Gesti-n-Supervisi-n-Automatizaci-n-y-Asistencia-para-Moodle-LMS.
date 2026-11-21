@@ -1,0 +1,49 @@
+{{!
+    @template local_moodlexhub/monitoring
+
+    Example context (json):
+    {
+      "dashboardurl": "/local/moodlexhub/index.php",
+      "metrics": [{"name":"PHP","value":"8.3.37"}]
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#switchurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{switchlabel}}</a>{{/switchurl}}
+    </div>
+    <dl class="moodlexhub-metrics">
+        {{#metrics}}<div class="moodlexhub-panel"><dt>{{name}}</dt><dd>{{value}}</dd></div>{{/metrics}}
+    </dl>
+    {{#hastasks}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} monitorplugintasks, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} monitortask, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} monitorstatus, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} monitorlastrun, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} monitornextrun, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#tasks}}<tr><td>{{name}}</td><td>{{status}}</td><td>{{last}}</td><td>{{next}}</td></tr>{{/tasks}}</tbody>
+            </table>
+        </div>
+    {{/hastasks}}
+    {{#hashistory}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} monitorhistory, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} monitortask, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} date {{/str}}</th>
+                    <th scope="col">{{#str}} monitorduration, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} monitorstatus, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>
+                    {{#history}}<tr><td>{{name}}</td><td>{{date}}</td><td>{{duration}}</td><td>{{status}}</td></tr>{{/history}}
+                </tbody>
+            </table>
+        </div>
+    {{/hashistory}}
+    {{^hashistory}}<p>{{#str}} monitornolog, local_moodlexhub {{/str}}</p>{{/hashistory}}
+</div>

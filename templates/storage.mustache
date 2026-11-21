@@ -1,0 +1,32 @@
+{{!
+    @template local_moodlexhub/storage
+
+    Example context (json):
+    {
+        "courseurl": "/local/moodlexhub/course.php?id=2",
+        "action": "/local/moodlexhub/storage.php?id=2",
+        "sesskey": "example"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} course {{/str}}</a>
+        <form method="post" action="{{action}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <button type="submit" name="scan" value="1" class="btn btn-primary">{{#str}} storagequeue, local_moodlexhub {{/str}}</button>
+        </form>
+    </div>
+    {{#state}}<p>{{#str}} monitorstatus, local_moodlexhub {{/str}} · {{state}}</p>{{/state}}
+    {{#hasmetrics}}
+        <p>{{#str}} storagemethodology, local_moodlexhub {{/str}}</p>
+        <dl class="moodlexhub-metrics">
+            {{#metrics}}<div class="moodlexhub-panel"><dt>{{name}}</dt><dd>{{value}}</dd></div>{{/metrics}}
+        </dl>
+    {{/hasmetrics}}
+    {{#tables}}{{> local_moodlexhub/report_table }}{{/tables}}
+    <section aria-labelledby="moodlexhub-storage-history">
+        <h2 id="moodlexhub-storage-history">{{#str}} storagehistory, local_moodlexhub {{/str}}</h2>
+        {{#hashistory}}<ul>{{#history}}<li><a href="{{url}}">{{date}}</a> · {{state}}</li>{{/history}}</ul>{{/hashistory}}
+        {{^hashistory}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hashistory}}
+    </section>
+</div>

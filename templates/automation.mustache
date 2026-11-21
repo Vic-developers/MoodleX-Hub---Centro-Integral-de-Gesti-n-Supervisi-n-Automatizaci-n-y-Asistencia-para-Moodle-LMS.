@@ -1,0 +1,33 @@
+{{!
+    @template local_moodlexhub/automation
+
+    Example context (json):
+    {"dashboardurl":"/local/moodlexhub/index.php","editurl":"/local/moodlexhub/automation_edit.php"}
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#rule}}
+            <a class="btn btn-outline-secondary" href="{{listurl}}">{{#str}} automation, local_moodlexhub {{/str}}</a>
+            <a class="btn btn-outline-secondary" href="{{editurl}}">{{#str}} automationedit, local_moodlexhub {{/str}}</a>
+            <form method="post" action="{{joburl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button name="run" value="1" class="btn btn-primary" type="submit">{{#str}} automationrun, local_moodlexhub {{/str}}</button>
+            </form>
+        {{/rule}}
+        {{^rule}}<a class="btn btn-primary" href="{{editurl}}">{{#str}} automationnew, local_moodlexhub {{/str}}</a>{{/rule}}
+    </div>
+    {{#rule}}
+        <section class="moodlexhub-panel">
+            <h2>{{title}}</h2>
+            <p class="moodlexhub-note">{{description}}</p>
+            <p>{{status}} · {{condition}} · {{action}}</p>
+            <p>{{#str}} monitornextrun, local_moodlexhub {{/str}} · {{next}}</p>
+            {{#runs}}{{> local_moodlexhub/report_table }}{{/runs}}
+        </section>
+    {{/rule}}
+    {{^rule}}
+        {{#hasentries}}<ul>{{#entries}}<li><a href="{{url}}">{{title}}</a> · {{status}}</li>{{/entries}}</ul>{{/hasentries}}
+        {{^hasentries}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasentries}}
+    {{/rule}}
+</div>

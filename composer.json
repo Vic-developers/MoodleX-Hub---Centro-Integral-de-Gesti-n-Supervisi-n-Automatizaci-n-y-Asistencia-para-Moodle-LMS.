@@ -1,0 +1,10 @@
+{
+    "name": "moodlex/moodlex-hub",
+    "description": "MoodleX Hub local plugin for Moodle LMS",
+    "type": "moodle-local",
+    "license": "GPL-3.0-or-later",
+    "require": {
+        "php": ">=8.3",
+        "ext-sodium": "*"
+    }
+}

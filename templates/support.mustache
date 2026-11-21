@@ -1,0 +1,47 @@
+{{!
+    @template local_moodlexhub/support
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php",
+        "action": "/local/moodlexhub/support.php"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        <a class="btn btn-outline-secondary" href="{{knowledgeurl}}">{{#str}} knowledge, local_moodlexhub {{/str}}</a>
+        {{#createurl}}<a class="btn btn-primary" href="{{.}}">{{#str}} ticketcreate, local_moodlexhub {{/str}}</a>{{/createurl}}
+        {{#exporturl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} exportcsv, local_moodlexhub {{/str}}</a>{{/exporturl}}
+    </div>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <div>
+            <label for="moodlexhub-ticket-search">{{#str}} search {{/str}}</label>
+            <input class="form-control" type="search" name="search" id="moodlexhub-ticket-search" value="{{search}}">
+        </div>
+        <div>
+            <label for="moodlexhub-ticket-status">{{#str}} ticketstatus, local_moodlexhub {{/str}}</label>
+            <select id="moodlexhub-ticket-status" class="form-select" name="status">
+                {{#statuses}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/statuses}}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+    </form>
+    {{#hastickets}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} ticketlist, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} ticketsubject, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} ticketstatus, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} ticketpriority, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} ticketupdated, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#tickets}}
+                    <tr><td><a href="{{url}}">{{subject}}</a></td><td>{{status}}</td><td>{{priority}}</td><td>{{date}}</td></tr>
+                {{/tickets}}</tbody>
+            </table>
+        </div>
+    {{/hastickets}}
+    {{^hastickets}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hastickets}}
+</div>

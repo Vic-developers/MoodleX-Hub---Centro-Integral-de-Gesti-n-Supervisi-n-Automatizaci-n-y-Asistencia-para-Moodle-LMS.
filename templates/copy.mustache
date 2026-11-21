@@ -1,0 +1,29 @@
+{{!
+    @template local_moodlexhub/copy
+
+    Example context (json):
+    {
+        "courseurl": "/local/moodlexhub/course.php?id=2",
+        "copyurl": "/backup/copy.php?id=2",
+        "progressurl": "/backup/copyprogress.php?id=2",
+        "space": "100 MB"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} course {{/str}}</a>
+        <a class="btn btn-primary" href="{{copyurl}}">{{#str}} coursecopylaunch, local_moodlexhub {{/str}}</a>
+        <a class="btn btn-outline-secondary" href="{{progressurl}}">{{#str}} coursecopyprogress, local_moodlexhub {{/str}}</a>
+    </div>
+    <dl class="moodlexhub-metrics">
+        <div class="moodlexhub-panel">
+            <dt>{{#str}} coursecopyspace, local_moodlexhub {{/str}}</dt><dd>{{space}}</dd>
+        </div>
+        {{#estimate}}
+            <div class="moodlexhub-panel">
+                <dt>{{#str}} coursecopyestimate, local_moodlexhub {{/str}}</dt><dd>{{.}}</dd>
+            </div>
+        {{/estimate}}
+    </dl>
+    <p>{{#str}} coursecopyspacenote, local_moodlexhub {{/str}}</p>
+</div>

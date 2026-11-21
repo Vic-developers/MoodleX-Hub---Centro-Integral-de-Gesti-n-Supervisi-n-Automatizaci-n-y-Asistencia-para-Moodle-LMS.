@@ -1,0 +1,69 @@
+{{!
+    @template local_moodlexhub/courses
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php",
+        "action": "/local/moodlexhub/courses.php",
+        "search": "",
+        "categories": [{"id": 0, "name": "All categories", "selected": true}],
+        "visibilities": [{"value": 0, "name": "All statuses", "selected": true}],
+        "hascourses": true,
+        "courses": [{"name": "Course", "shortname": "C", "visible": "Visible", "url": "/local/moodlexhub/course.php?id=2"}]
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#bulkurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} qualitybulk, local_moodlexhub {{/str}}</a>{{/bulkurl}}
+        {{#storagelisturl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} categorystorage, local_moodlexhub {{/str}}</a>{{/storagelisturl}}
+        {{#exporturl}}
+            <a class="btn btn-outline-secondary" href="{{.}}">{{#str}} exportcsv, local_moodlexhub {{/str}}</a>
+        {{/exporturl}}
+    </div>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <div>
+            <label for="moodlexhub-course-search">{{#str}} search {{/str}}</label>
+            <input class="form-control" type="search" name="search" id="moodlexhub-course-search" value="{{search}}">
+        </div>
+        <div>
+            <label for="moodlexhub-course-category">{{#str}} category {{/str}}</label>
+            <select class="form-select" name="category" id="moodlexhub-course-category">
+                {{#categories}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/categories}}
+            </select>
+        </div>
+        <div>
+            <label for="moodlexhub-course-visibility">{{#str}} visibility, local_moodlexhub {{/str}}</label>
+            <select class="form-select" name="visibility" id="moodlexhub-course-visibility">
+                {{#visibilities}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                {{/visibilities}}
+            </select>
+        </div>
+        <div>
+            <label for="moodlexhub-course-health">{{#str}} coursehealth, local_moodlexhub {{/str}}</label>
+            <select class="form-select" name="health" id="moodlexhub-course-health">
+                {{#healthoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/healthoptions}}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">{{#str}} search {{/str}}</button>
+    </form>
+    {{#hascourses}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption class="visually-hidden">{{#str}} courses, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} fullnamecourse {{/str}}</th>
+                    <th scope="col">{{#str}} shortnamecourse {{/str}}</th>
+                    <th scope="col">{{#str}} visibility, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#courses}}
+                    <tr><td><a href="{{url}}">{{name}}</a></td><td>{{shortname}}</td><td>{{visible}}</td></tr>
+                {{/courses}}</tbody>
+            </table>
+        </div>
+    {{/hascourses}}
+    {{^hascourses}}
+        <p>{{#str}} nocoursematches, local_moodlexhub {{/str}}</p>
+    {{/hascourses}}
+</div>

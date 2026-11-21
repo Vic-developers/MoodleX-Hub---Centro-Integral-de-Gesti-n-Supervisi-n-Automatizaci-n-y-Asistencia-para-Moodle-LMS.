@@ -1,0 +1,108 @@
+{{!
+    @template local_moodlexhub/academic
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php",
+        "chooseurl": "/local/moodlexhub/academic.php",
+        "view": "teacher"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#feedbackurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} feedback, local_moodlexhub {{/str}}</a>{{/feedbackurl}}
+        {{#categoryurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} categoryanalytics, local_moodlexhub {{/str}}</a>{{/categoryurl}}
+    </div>
+    <form class="moodlexhub-filters" method="get" action="{{chooseurl}}">
+        <input type="hidden" name="view" value="{{view}}">
+        <input type="hidden" name="days" value="{{days}}">
+        <div>
+            <label for="moodlexhub-academic-course">{{#str}} course {{/str}}</label>
+            <select id="moodlexhub-academic-course" class="form-select" name="courseid">
+                {{#courses}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/courses}}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">{{#str}} studentchoosecourse, local_moodlexhub {{/str}}</button>
+    </form>
+    {{#scoped}}
+        <form class="moodlexhub-filters" method="get" action="{{groupurl}}">
+            <input type="hidden" name="view" value="{{view}}">
+            <input type="hidden" name="courseid" value="{{courseid}}">
+            <div>
+                <label for="moodlexhub-academic-days">{{#str}} academicperioddays, local_moodlexhub {{/str}}</label>
+                <select id="moodlexhub-academic-days" class="form-select" name="days">
+                    {{#intervals}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>
+                    {{/intervals}}
+                </select>
+            </div>
+            <div>
+                <label for="moodlexhub-academic-group">{{#str}} group {{/str}}</label>
+                <select id="moodlexhub-academic-group" class="form-select" name="group">
+                    {{#groups}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/groups}}
+                </select>
+            </div>
+            <label class="form-check">
+                <input type="checkbox" class="form-check-input" name="inactive" value="1" {{#inactive}}checked{{/inactive}}>
+                {{#str}} academicinactive, local_moodlexhub {{/str}}
+            </label>
+            <div>
+                <label for="moodlexhub-academic-learner">{{#str}} academiclearnerid, local_moodlexhub {{/str}}</label>
+                <input id="moodlexhub-academic-learner" name="learner" type="number" min="1" class="form-control" value="{{learner}}">
+            </div>
+            <div>
+                <label for="moodlexhub-academic-enddate">{{#str}} academicenddate, local_moodlexhub {{/str}}</label>
+                <input id="moodlexhub-academic-enddate" name="enddate" type="date" class="form-control" value="{{enddate}}">
+            </div>
+            <button class="btn btn-primary" type="submit">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+        </form>
+        {{#analytics}}
+            {{#logavailable}}
+                <section class="moodlexhub-panel" aria-labelledby="moodlexhub-academic-trends">
+                    <h2 id="moodlexhub-academic-trends">{{#str}} academictrends, local_moodlexhub {{/str}}</h2>
+                    <p>{{#str}} academiclogmethod, local_moodlexhub {{/str}}</p>
+                    {{{chart}}}
+                </section>
+            {{/logavailable}}
+            {{^logavailable}}<p>{{#str}} academicnolog, local_moodlexhub {{/str}}</p>{{/logavailable}}
+        {{/analytics}}
+        {{#teacher}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-course-dates">
+                <h2 id="moodlexhub-course-dates">{{#str}} teacherupcoming, local_moodlexhub {{/str}}</h2>
+                {{#hasupcoming}}
+                    <ul>
+                        {{#upcoming}}<li><a href="{{url}}">{{name}}</a> — {{label}} {{date}}</li>{{/upcoming}}
+                    </ul>
+                {{/hasupcoming}}
+                {{^hasupcoming}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasupcoming}}
+            </section>
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-assignment-work">
+                <h2 id="moodlexhub-assignment-work">{{#str}} teacherassignments, local_moodlexhub {{/str}}</h2>
+                {{#hasassignments}}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead><tr>
+                                <th scope="col">{{#str}} activity {{/str}}</th>
+                                <th scope="col">{{#str}} teacherduedate, local_moodlexhub {{/str}}</th>
+                                <th scope="col">{{#str}} teachersubmitted, local_moodlexhub {{/str}}</th>
+                                <th scope="col">{{#str}} teachermissing, local_moodlexhub {{/str}}</th>
+                                <th scope="col">{{#str}} teacheroverdue, local_moodlexhub {{/str}}</th>
+                                <th scope="col">{{#str}} teachergrading, local_moodlexhub {{/str}}</th>
+                            </tr></thead>
+                            <tbody>{{#assignmentrows}}
+                                <tr>
+                                    <td><a href="{{url}}">{{name}}</a></td><td>{{due}}</td><td>{{submitted}}</td>
+                                    <td>{{missing}}</td><td>{{late}}</td><td>{{grading}}</td>
+                                </tr>
+                            {{/assignmentrows}}</tbody>
+                        </table>
+                    </div>
+                {{/hasassignments}}
+                {{^hasassignments}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasassignments}}
+            </section>
+        {{/teacher}}
+        {{#participants}}{{> local_moodlexhub/report_table }}{{/participants}}
+        {{{pager}}}
+    {{/scoped}}
+</div>

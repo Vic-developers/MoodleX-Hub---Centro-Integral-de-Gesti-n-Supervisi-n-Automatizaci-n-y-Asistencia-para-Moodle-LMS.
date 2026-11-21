@@ -1,0 +1,48 @@
+{{!
+    @template local_moodlexhub/users
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php",
+        "action": "/local/moodlexhub/users.php"
+    }
+}}
+<div class="moodlexhub">
+    <div><a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a></div>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <div>
+            <label for="moodlexhub-user-search">{{#str}} search {{/str}}</label>
+            <input type="search" class="form-control" id="moodlexhub-user-search" name="search" value="{{search}}">
+        </div>
+        <div>
+            <label for="moodlexhub-user-filter">{{#str}} filters {{/str}}</label>
+            <select id="moodlexhub-user-filter" name="filter" class="form-select">
+                {{#filters}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/filters}}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+    </form>
+    {{#duplicates}}<p>{{#str}} directoryduplicateshint, local_moodlexhub {{/str}}</p>{{/duplicates}}
+    {{#hasusers}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} userdirectory, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} fullname {{/str}}</th>
+                    <th scope="col">{{#str}} username {{/str}}</th>
+                    <th scope="col">{{#str}} monitorstatus, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} lastaccess {{/str}}</th>
+                    <th scope="col">{{#str}} actions {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#users}}
+                    <tr>
+                        <td>{{#profile}}<a href="{{.}}">{{name}}</a>{{/profile}}{{^profile}}{{name}}{{/profile}}</td>
+                        <td>{{username}}</td><td>{{status}}</td><td>{{date}}</td>
+                        <td>{{#logs}}<a href="{{.}}">{{#str}} logs {{/str}}</a>{{/logs}}</td>
+                    </tr>
+                {{/users}}</tbody>
+            </table>
+        </div>
+    {{/hasusers}}
+    {{^hasusers}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasusers}}
+</div>

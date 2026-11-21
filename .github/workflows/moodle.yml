@@ -1,0 +1,81 @@
+name: Moodle integration
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        moodle: [v5.0.12, v5.1.9, v5.2.5, v5.3.1]
+    env:
+      MOODLE_TAG: ${{ matrix.moodle }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Build and start isolated Moodle
+        run: docker compose -p moodlexhub-ci up -d --build
+      - name: Wait for Moodle installation
+        run: curl --fail --silent --show-error --retry 60 --retry-all-errors --retry-delay 5 http://localhost:8053/login/index.php --output /dev/null
+      - name: PHP lint
+        run: docker compose -p moodlexhub-ci exec -T moodle find /opt/moodle-web/local/moodlexhub -name '*.php' -type f -exec php -l '{}' +
+      - name: Check database structure
+        run: docker compose -p moodlexhub-ci exec -T moodle php admin/cli/check_database_schema.php
+      - name: Validate XMLDB against the Moodle schema
+        run: |
+          docker compose -p moodlexhub-ci exec -T moodle php -r '
+              $schema = "/opt/moodle-web/lib/xmldb/xmldb.xsd";
+              $document = new DOMDocument();
+              $loaded = $document->load("/opt/moodle-web/local/moodlexhub/db/install.xml", LIBXML_NONET);
+              exit($loaded && $document->schemaValidate($schema) ? 0 : 1);
+          '
+      - name: Initialise PHPUnit
+        run: docker compose -p moodlexhub-ci exec -T moodle php /opt/moodle-web/admin/tool/phpunit/cli/init.php --disable-composer
+      - name: PHPUnit
+        run: docker compose -p moodlexhub-ci exec -T moodle vendor/bin/phpunit --testsuite local_moodlexhub_testsuite --fail-on-notice --display-notices
+      - name: Initialise Behat
+        run: docker compose -p moodlexhub-ci exec -T -u www-data moodle php /opt/moodle-web/admin/tool/behat/cli/init.php --disable-composer
+      - name: Behat
+        run: docker compose -p moodlexhub-ci exec -T -u www-data moodle vendor/bin/behat --config /var/moodledata/behat/behatrun/behat/behat.yml --tags=@local_moodlexhub
+      - name: Install Moodle quality tools
+        if: matrix.moodle == 'v5.3.1'
+        run: |
+          docker compose -p moodlexhub-ci exec -T moodle composer create-project --no-interaction --no-scripts moodlehq/moodle-plugin-ci /tmp/moodle-plugin-ci 4.5.11
+      - name: Moodle Code Checker
+        if: matrix.moodle == 'v5.3.1'
+        run: |
+          docker compose -p moodlexhub-ci exec -T moodle /tmp/moodle-plugin-ci/bin/moodle-plugin-ci phpcs --max-warnings=-1 /opt/moodle-web/local/moodlexhub
+      - name: Moodle PHPDoc Checker
+        if: matrix.moodle == 'v5.3.1'
+        run: |
+          docker compose -p moodlexhub-ci exec -T moodle sh -ec '
+            cp -a /tmp/moodle-plugin-ci/vendor/moodlehq/moodle-local_moodlecheck /opt/moodle-web/local/moodlecheck
+            php admin/cli/upgrade.php --non-interactive
+            /tmp/moodle-plugin-ci/bin/moodle-plugin-ci phpdoc --moodle=/var/www/html /opt/moodle-web/local/moodlexhub >/tmp/moodle-phpdoc.log 2>&1
+            cat /tmp/moodle-phpdoc.log
+            ! grep -F "Coding error detected" /tmp/moodle-phpdoc.log
+          '
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose -p moodlexhub-ci logs --tail 100
+
+  package:
+    needs: integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Build and verify Moodle ZIP
+        run: python3 tools/package.py
+      - name: Attach installable ZIP
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: moodlexhub-installation
+          path: artifacts/moodlexhub-*.zip
+          if-no-files-found: error

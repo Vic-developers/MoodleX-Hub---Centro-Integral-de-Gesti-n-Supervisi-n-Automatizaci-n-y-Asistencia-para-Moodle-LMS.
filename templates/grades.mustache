@@ -1,0 +1,47 @@
+{{!
+    @template local_moodlexhub/grades
+
+    Example context (json):
+    {
+        "courseurl": "/local/moodlexhub/course.php?id=2",
+        "action": "/local/moodlexhub/grades.php",
+        "courseid": 2
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} course {{/str}}</a>
+        <form method="post" action="{{recordurl}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <button class="btn btn-outline-secondary" name="record" value="1" type="submit">
+                {{#str}} gradesnapshot, local_moodlexhub {{/str}}
+            </button>
+        </form>
+    </div>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <input type="hidden" name="id" value="{{courseid}}">
+        <div>
+            <label for="moodlexhub-grade-search">{{#str}} search {{/str}}</label>
+            <input id="moodlexhub-grade-search" type="search" name="search" class="form-control" value="{{search}}">
+        </div>
+        <label class="form-check">
+            <input type="checkbox" class="form-check-input" name="issues" value="1" {{#onlyissues}}checked{{/onlyissues}}>
+            {{#str}} gradeissuesonly, local_moodlexhub {{/str}}
+        </label>
+        <button type="submit" class="btn btn-primary">{{#str}} search {{/str}}</button>
+    </form>
+    {{#tables}}{{> local_moodlexhub/report_table }}{{/tables}}
+    {{#hashistory}}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} gradehistory, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} date {{/str}}</th>
+                    <th scope="col">{{#str}} gradecategories, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} gradeitems, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#history}}<tr><td>{{date}}</td><td>{{categories}}</td><td>{{items}}</td></tr>{{/history}}</tbody>
+            </table>
+        </div>
+    {{/hashistory}}
+</div>

@@ -1,0 +1,120 @@
+.moodlexhub {
+    display: grid;
+    gap: 1rem;
+    margin-block: 1rem;
+}
+
+.moodlexhub-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.moodlexhub-panel {
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: .75rem;
+    padding: clamp(1rem, 4vw, 2rem);
+}
+
+.moodlexhub-list {
+    display: grid;
+    gap: .5rem;
+}
+
+.moodlexhub-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: .75rem;
+}
+
+.moodlexhub-filters > div {
+    flex: 1 1 12rem;
+}
+
+.moodlexhub-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: .75rem;
+}
+
+.moodlexhub-metrics dd {
+    margin: .25rem 0 0;
+    font-size: 1.25rem;
+}
+
+.moodlexhub-note {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.moodlexhub-dashboard {
+    grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+    gap: 1.25rem;
+}
+
+.moodlexhub-sidebar {
+    padding: .75rem;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: .75rem;
+    align-self: start;
+}
+
+.moodlexhub-nav-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.moodlexhub-nav-list a {
+    display: block;
+    padding: .5rem .625rem;
+    border-radius: .375rem;
+}
+
+.moodlexhub-nav-list a:hover {
+    background: var(--bs-secondary-bg, #edf1f4);
+}
+
+.moodlexhub-dashboard-main {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    align-content: start;
+}
+
+.moodlexhub-dashboard-main h2 {
+    font-size: 1.125rem;
+}
+
+.moodlexhub-toolbar {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+}
+
+.moodlexhub-toolbar form {
+    flex-wrap: nowrap;
+}
+
+.moodlexhub-toolbar form[role="search"] {
+    flex: 1 1 14rem;
+}
+
+.moodlexhub-stat {
+    margin: .25rem 0 .75rem;
+    font-size: 1.8rem;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+    .moodlexhub-dashboard {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .moodlexhub-nav-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}

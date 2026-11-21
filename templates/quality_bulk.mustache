@@ -1,0 +1,35 @@
+{{!
+    @template local_moodlexhub/quality_bulk
+
+    Example context (json):
+    {"coursesurl":"/local/moodlexhub/courses.php","baseurl":"/local/moodlexhub/quality_bulk.php"}
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{coursesurl}}">{{#str}} courses, local_moodlexhub {{/str}}</a>
+        {{#hasjob}}<a class="btn btn-outline-secondary" href="{{baseurl}}">{{#str}} qualitybulk, local_moodlexhub {{/str}}</a>{{/hasjob}}
+    </div>
+    {{^hasjob}}
+        <form class="moodlexhub-filters" method="post" action="{{baseurl}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <div>
+                <label for="moodlexhub-bulk-category">{{#str}} category {{/str}}</label>
+                <select class="form-select" name="categoryid" id="moodlexhub-bulk-category">
+                    {{#categories}}<option value="{{id}}">{{name}}</option>{{/categories}}
+                </select>
+            </div>
+            <button type="submit" name="run" value="1" class="btn btn-primary">{{#str}} qualityqueuebatch, local_moodlexhub {{/str}}</button>
+        </form>
+        {{#hasjobs}}<ul>{{#jobs}}<li><a href="{{url}}">{{date}}</a> · {{state}}</li>{{/jobs}}</ul>{{/hasjobs}}
+        {{^hasjobs}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasjobs}}
+    {{/hasjob}}
+    {{#hasjob}}
+        <p>{{#str}} ticketstatus, local_moodlexhub {{/str}} · {{state}}</p>
+        {{#hasrows}}
+            <ul class="moodlexhub-list">{{#rows}}
+                <li>{{name}} · {{state}}{{#link}} · <a href="{{.}}">{{#str}} auditresult, local_moodlexhub {{/str}}</a>{{/link}}</li>
+            {{/rows}}</ul>
+        {{/hasrows}}
+        {{^hasrows}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasrows}}
+    {{/hasjob}}
+</div>

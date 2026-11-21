@@ -1,0 +1,59 @@
+{{!
+    @template local_moodlexhub/enrol
+
+    Example context (json):
+    {
+        "courseurl": "/local/moodlexhub/course.php?id=2",
+        "baseurl": "/local/moodlexhub/enrol.php?id=2",
+        "templateurl": "/local/moodlexhub/enrol.php?id=2&download=template"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} course {{/str}}</a>
+        {{#templateurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} importtemplate, local_moodlexhub {{/str}}</a>{{/templateurl}}
+        {{#jobview}}<a class="btn btn-outline-secondary" href="{{baseurl}}">{{#str}} enrolimports, local_moodlexhub {{/str}}</a>{{/jobview}}
+        {{#exporturl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} exportcsv, local_moodlexhub {{/str}}</a>{{/exporturl}}
+        {{#canconfirm}}
+            <form method="post" action="{{joburl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button class="btn btn-primary" type="submit" name="confirmrun" value="1">{{#str}} importconfirm, local_moodlexhub {{/str}}</button>
+            </form>
+        {{/canconfirm}}
+        {{#canretry}}
+            <form method="post" action="{{joburl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button class="btn btn-outline-secondary" name="retryrun" value="1" type="submit">
+                    {{#str}} importretryaction, local_moodlexhub {{/str}}
+                </button>
+            </form>
+        {{/canretry}}
+    </div>
+    {{#jobview}}
+        <p>{{#str}} importstatus, local_moodlexhub {{/str}} · {{jobstatus}}</p>
+        <dl class="moodlexhub-metrics">
+            {{#summary}}<div class="moodlexhub-panel"><dt>{{name}}</dt><dd>{{value}}</dd></div>{{/summary}}
+        </dl>
+        <div class="table-responsive">
+            <table class="table">
+                <caption>{{#str}} importrows, local_moodlexhub {{/str}}</caption>
+                <thead><tr>
+                    <th scope="col">{{#str}} importposition, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} importstatus, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} importreason, local_moodlexhub {{/str}}</th>
+                    <th scope="col">{{#str}} importattempts, local_moodlexhub {{/str}}</th>
+                </tr></thead>
+                <tbody>{{#rows}}<tr><td>{{position}}</td><td>{{status}}</td><td>{{reason}}</td><td>{{attempts}}</td></tr>{{/rows}}</tbody>
+            </table>
+        </div>
+    {{/jobview}}
+    {{^jobview}}
+        {{^canupload}}<p>{{#str}} importinvaliddestination, local_moodlexhub {{/str}}</p>{{/canupload}}
+        {{#hasjobs}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-import-history">
+                <h2 id="moodlexhub-import-history">{{#str}} importhistory, local_moodlexhub {{/str}}</h2>
+                <ul>{{#jobs}}<li><a href="{{url}}">{{date}}</a> · {{status}}</li>{{/jobs}}</ul>
+            </section>
+        {{/hasjobs}}
+    {{/jobview}}
+</div>

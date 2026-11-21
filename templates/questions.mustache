@@ -1,0 +1,30 @@
+{{!
+    @template local_moodlexhub/questions
+
+    Example context (json):
+    {
+        "action": "/local/moodlexhub/questions.php",
+        "courseid": 2
+    }
+}}
+<div class="moodlexhub">
+    <div><a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} course {{/str}}</a></div>
+    <form class="moodlexhub-filters" action="{{action}}" method="get">
+        <input type="hidden" name="id" value="{{courseid}}">
+        <div>
+            <label for="moodlexhub-question-search">{{#str}} search {{/str}}</label>
+            <input type="search" name="search" id="moodlexhub-question-search" class="form-control" value="{{search}}">
+        </div>
+        {{#selectors}}
+            <div>
+                <label for="moodlexhub-question-{{key}}">{{label}}</label>
+                <select name="{{key}}" id="moodlexhub-question-{{key}}" class="form-select">
+                    {{#options}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/options}}
+                </select>
+            </div>
+        {{/selectors}}
+        <button type="submit" class="btn btn-primary">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+    </form>
+    <p>{{#str}} questionmethod, local_moodlexhub {{/str}}</p>
+    {{#report}}{{> local_moodlexhub/report_table }}{{/report}}
+</div>

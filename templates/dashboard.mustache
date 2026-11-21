@@ -1,0 +1,81 @@
+{{!
+    @template local_moodlexhub/dashboard
+
+    Example context (json):
+    {
+        "navigation": [{"label":"My planner","url":"/local/moodlexhub/student.php"}],
+        "showcourses": true,
+        "hascourses": true,
+        "courses": [{"name": "Example course", "url": "/course/view.php?id=2"}],
+        "preferencesurl": "/local/moodlexhub/preferences.php",
+        "searchurl": "/local/moodlexhub/search.php",
+        "mycoursesurl": "/my/courses.php"
+    }
+}}
+<div class="moodlexhub moodlexhub-dashboard">
+    <aside class="moodlexhub-sidebar">
+        <nav aria-label="{{#str}} pluginname, local_moodlexhub {{/str}}">
+            <ul class="moodlexhub-nav-list">
+                {{#navigation}}<li><a href="{{url}}">{{label}}</a></li>{{/navigation}}
+                <li><a href="{{preferencesurl}}">{{#str}} preferences, local_moodlexhub {{/str}}</a></li>
+                {{#settingsurl}}<li><a href="{{.}}">{{#str}} settings, local_moodlexhub {{/str}}</a></li>{{/settingsurl}}
+            </ul>
+        </nav>
+    </aside>
+    <div class="moodlexhub-dashboard-main">
+        <div class="moodlexhub-toolbar">
+            <form class="moodlexhub-actions" method="get" action="{{searchurl}}" role="search">
+                <label class="visually-hidden" for="moodlexhub-search">{{#str}} dashboardsearch, local_moodlexhub {{/str}}</label>
+                <input class="form-control" type="search" name="q" id="moodlexhub-search" required
+                    placeholder="{{#str}} dashboardsearch, local_moodlexhub {{/str}}">
+                <button type="submit" class="btn btn-primary">{{#str}} search {{/str}}</button>
+            </form>
+            {{#haslanguages}}
+                <form class="moodlexhub-actions" method="get" action="{{homeurl}}">
+                    <label class="visually-hidden" for="moodlexhub-language">{{#str}} language {{/str}}</label>
+                    <select class="form-select" name="lang" id="moodlexhub-language">
+                        {{#languages}}<option value="{{code}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/languages}}
+                    </select>
+                    <button type="submit" class="btn btn-outline-secondary">{{#str}} dashboardlanguage, local_moodlexhub {{/str}}</button>
+                </form>
+            {{/haslanguages}}
+        </div>
+        {{#shownotifications}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-notifications">
+                <h2 id="moodlexhub-notifications">{{#str}} dashboardnotifications, local_moodlexhub {{/str}}</h2>
+                <p class="moodlexhub-stat">{{notificationcount}}</p>
+                <a href="{{notificationurl}}">{{#str}} dashboardnotificationsopen, local_moodlexhub {{/str}}</a>
+            </section>
+        {{/shownotifications}}
+        {{#monitortile}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-task-alerts">
+                <h2 id="moodlexhub-task-alerts">{{#str}} dashboardtaskfailures, local_moodlexhub {{/str}}</h2>
+                <p class="moodlexhub-stat">{{failures}}</p>
+                <a href="{{url}}">{{#str}} dashboardmonitoropen, local_moodlexhub {{/str}}</a>
+            </section>
+        {{/monitortile}}
+        {{#showcourses}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-my-courses">
+                <h2 id="moodlexhub-my-courses">{{#str}} mycourses, local_moodlexhub {{/str}}</h2>
+                {{#hascourses}}
+                    <ul class="moodlexhub-list">
+                        {{#courses}}<li><a href="{{url}}">{{name}}</a></li>{{/courses}}
+                    </ul>
+                    <a href="{{mycoursesurl}}">{{#str}} viewallcourses, local_moodlexhub {{/str}}</a>
+                {{/hascourses}}
+                {{^hascourses}}<p>{{#str}} courselistempty, local_moodlexhub {{/str}}</p>{{/hascourses}}
+            </section>
+        {{/showcourses}}
+        {{#showrecent}}
+            <section class="moodlexhub-panel" aria-labelledby="moodlexhub-recent-courses">
+                <h2 id="moodlexhub-recent-courses">{{#str}} dashboardrecent, local_moodlexhub {{/str}}</h2>
+                {{#hasrecent}}
+                    <ul class="moodlexhub-list">
+                        {{#recent}}<li><a href="{{url}}">{{name}}</a> · {{date}}</li>{{/recent}}
+                    </ul>
+                {{/hasrecent}}
+                {{^hasrecent}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasrecent}}
+            </section>
+        {{/showrecent}}
+    </div>
+</div>

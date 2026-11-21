@@ -1,0 +1,39 @@
+{{!
+    @template local_moodlexhub/reports
+
+    Example context (json):
+    {"dashboardurl":"/local/moodlexhub/index.php","editurl":"/local/moodlexhub/report_edit.php"}
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#viewreport}}
+            <a class="btn btn-outline-secondary" href="{{listurl}}">{{#str}} reports, local_moodlexhub {{/str}}</a>
+            <a class="btn btn-outline-secondary" href="{{editurl}}">{{#str}} reportedit, local_moodlexhub {{/str}}</a>
+            <form method="post" action="{{joburl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <button name="run" value="1" class="btn btn-primary" type="submit">{{#str}} reportrun, local_moodlexhub {{/str}}</button>
+            </form>
+        {{/viewreport}}
+        {{^viewreport}}<a class="btn btn-primary" href="{{editurl}}">{{#str}} reportnew, local_moodlexhub {{/str}}</a>{{/viewreport}}
+    </div>
+    {{#title}}<h2>{{.}}</h2>{{/title}}
+    {{#nextdue}}<p>{{#str}} monitornextrun, local_moodlexhub {{/str}} · {{.}}</p>{{/nextdue}}
+    {{#runstatus}}<p>{{#str}} monitorstatus, local_moodlexhub {{/str}} · {{.}}</p>{{/runstatus}}
+    {{#result}}
+        <section class="moodlexhub-panel">
+            <p>{{generated}} · {{#str}} reportfiltervalue, local_moodlexhub {{/str}} {{filter}}</p>
+            <p>{{method}}</p>
+            {{#table}}{{> local_moodlexhub/report_table }}{{/table}}
+        </section>
+    {{/result}}
+    <div class="moodlexhub-actions">
+        {{#downloads}}<a class="btn btn-outline-secondary" href="{{url}}">{{#str}} download {{/str}} {{name}}</a>{{/downloads}}
+    </div>
+    {{#hasentries}}
+        <h2>{{#viewreport}}{{#str}} monitorhistory, local_moodlexhub {{/str}}{{/viewreport}}
+            {{^viewreport}}{{#str}} reportsaved, local_moodlexhub {{/str}}{{/viewreport}}</h2>
+        <ul>{{#entries}}<li><a href="{{url}}">{{label}}</a></li>{{/entries}}</ul>
+    {{/hasentries}}
+    {{^hasentries}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasentries}}
+</div>

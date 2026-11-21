@@ -1,0 +1,48 @@
+{{!
+    @template local_moodlexhub/quality
+
+    Example context (json):
+    {
+        "course": "Example course",
+        "courseurl": "/local/moodlexhub/course.php?id=2",
+        "action": "/local/moodlexhub/quality.php?id=2",
+        "sesskey": "example"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{courseurl}}">{{course}}</a>
+        <form method="post" action="{{action}}">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <button class="btn btn-primary" type="submit" name="run" value="1">{{#str}} runaudit, local_moodlexhub {{/str}}</button>
+        </form>
+    </div>
+    {{#viewaudit}}
+        <section class="moodlexhub-panel" aria-labelledby="moodlexhub-audit-result">
+            <h2 id="moodlexhub-audit-result">{{#str}} auditresult, local_moodlexhub {{/str}}</h2>
+            <p>{{date}} · {{score}}</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead><tr>
+                        <th scope="col">{{#str}} qualityrule, local_moodlexhub {{/str}}</th>
+                        <th scope="col">{{#str}} qualityweight, local_moodlexhub {{/str}}</th>
+                        <th scope="col">{{#str}} auditresult, local_moodlexhub {{/str}}</th>
+                        <th scope="col">{{#str}} qualityrecommendation, local_moodlexhub {{/str}}</th>
+                    </tr></thead>
+                    <tbody>{{#findings}}
+                        <tr><td>{{rule}}</td><td>{{weight}}</td><td>{{status}}</td><td>{{recommendation}}</td></tr>
+                    {{/findings}}</tbody>
+                </table>
+            </div>
+        </section>
+    {{/viewaudit}}
+    <section aria-labelledby="moodlexhub-audit-history">
+        <h2 id="moodlexhub-audit-history">{{#str}} audithistory, local_moodlexhub {{/str}}</h2>
+        {{#hashistory}}
+            <ul>{{#history}}<li><a href="{{url}}">{{date}}</a> · {{score}}</li>{{/history}}</ul>
+        {{/hashistory}}
+        {{^hashistory}}
+            <p>{{#str}} noaudit, local_moodlexhub {{/str}}</p>
+        {{/hashistory}}
+    </section>
+</div>

@@ -1,0 +1,99 @@
+{{!
+    @template local_moodlexhub/student
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php",
+        "calendarurl": "/calendar/view.php?view=month",
+        "newnoteurl": "/local/moodlexhub/student_note.php",
+        "action": "/local/moodlexhub/student.php"
+    }
+}}
+<div class="moodlexhub">
+    <nav class="moodlexhub-actions" aria-label="{{#str}} studentplanner, local_moodlexhub {{/str}}">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        <a class="btn btn-outline-secondary" href="{{calendarurl}}">{{#str}} calendar, calendar {{/str}}</a>
+        {{#reminderurl}}
+            <a class="btn btn-outline-secondary" href="{{.}}">{{#str}} studentreminderadd, local_moodlexhub {{/str}}</a>
+        {{/reminderurl}}
+        <a class="btn btn-outline-secondary" href="{{newnoteurl}}">{{#str}} studentaddnote, local_moodlexhub {{/str}}</a>
+    </nav>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <div>
+            <label for="moodlexhub-student-course">{{#str}} course {{/str}}</label>
+            <select id="moodlexhub-student-course" class="form-select" name="courseid">
+                {{#courses}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/courses}}
+            </select>
+        </div>
+        <div>
+            <label for="moodlexhub-student-days">{{#str}} studentperiod, local_moodlexhub {{/str}}</label>
+            <select id="moodlexhub-student-days" class="form-select" name="days">
+                {{#periods}}<option value="{{days}}" {{#selected}}selected{{/selected}}>{{days}}</option>{{/periods}}
+            </select>
+        </div>
+        <div>
+            <label for="moodlexhub-student-status">{{#str}} monitorstatus, local_moodlexhub {{/str}}</label>
+            <select id="moodlexhub-student-status" class="form-select" name="status">
+                {{#filters}}<option value="{{key}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/filters}}
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+    </form>
+    <section class="moodlexhub-panel" aria-labelledby="moodlexhub-student-deadlines">
+        <h2 id="moodlexhub-student-deadlines">{{#str}} studentupcoming, local_moodlexhub {{/str}}</h2>
+        {{#hasevents}}
+            <ul class="moodlexhub-list">
+                {{#events}}<li><a href="{{url}}">{{name}}</a> · {{date}}{{#course}} · {{.}}{{/course}}</li>{{/events}}
+            </ul>
+        {{/hasevents}}
+        {{^hasevents}}<p>{{#str}} studentsafeempty, local_moodlexhub {{/str}}</p>{{/hasevents}}
+    </section>
+    {{#showactivities}}
+        <section class="moodlexhub-panel" aria-labelledby="moodlexhub-student-activities">
+            <h2 id="moodlexhub-student-activities">{{#str}} studentprogress, local_moodlexhub {{/str}}</h2>
+            <p>{{#str}} studenttracked, local_moodlexhub {{/str}} {{completed}} / {{tracked}}</p>
+            {{#hasactivities}}
+                <ul class="moodlexhub-list">
+                    {{#activities}}
+                        <li>
+                            <a href="{{url}}">{{name}}</a> · {{status}}
+                            <form class="d-inline-block" method="post" action="{{actionwithfilters}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <input type="hidden" name="activity" value="{{id}}">
+                                {{#favourite}}
+                                    <button type="submit" class="btn btn-link" name="favourite" value="0">
+                                        {{#str}} studentremovefavourite, local_moodlexhub {{/str}}
+                                    </button>
+                                {{/favourite}}
+                                {{^favourite}}
+                                    <button type="submit" class="btn btn-link" name="favourite" value="1">
+                                        {{#str}} studentaddfavourite, local_moodlexhub {{/str}}
+                                    </button>
+                                {{/favourite}}
+                            </form>
+                        </li>
+                    {{/activities}}
+                </ul>
+            {{/hasactivities}}
+            {{^hasactivities}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasactivities}}
+            {{{activitypager}}}
+        </section>
+    {{/showactivities}}
+    <section class="moodlexhub-panel" aria-labelledby="moodlexhub-student-notes">
+        <h2 id="moodlexhub-student-notes">{{#str}} studentnotes, local_moodlexhub {{/str}}</h2>
+        {{#notes}}
+            <article>
+                <h3><a href="{{url}}">{{title}}</a></h3>
+                <p class="moodlexhub-note">{{body}}</p>
+                <form method="post" action="{{actionwithfilters}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <button class="btn btn-outline-secondary" type="submit" name="deletenote" value="{{id}}">
+                        {{#str}} delete {{/str}}
+                    </button>
+                </form>
+            </article>
+        {{/notes}}
+        {{^hasnotes}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasnotes}}
+        {{{notepager}}}
+    </section>
+</div>

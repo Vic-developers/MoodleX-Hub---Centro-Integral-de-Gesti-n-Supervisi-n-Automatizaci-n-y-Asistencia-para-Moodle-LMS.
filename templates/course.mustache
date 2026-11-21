@@ -1,0 +1,29 @@
+{{!
+    @template local_moodlexhub/course
+
+    Example context (json):
+    {
+        "catalogurl": "/local/moodlexhub/courses.php",
+        "courseurl": "/course/view.php?id=2",
+        "fields": [{"label": "Short name", "value": "C"}]
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        {{#catalogurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} courses, local_moodlexhub {{/str}}</a>{{/catalogurl}}
+        {{#courseurl}}<a class="btn btn-primary" href="{{.}}">{{#str}} opencourse, local_moodlexhub {{/str}}</a>{{/courseurl}}
+        {{#participantsurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} participants {{/str}}</a>{{/participantsurl}}
+        {{#compareurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} coursecompare, local_moodlexhub {{/str}}</a>{{/compareurl}}
+        {{#logsurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} logs {{/str}}</a>{{/logsurl}}
+        {{#qualityurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} quality, local_moodlexhub {{/str}}</a>{{/qualityurl}}
+        {{#enrolurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} enrolimports, local_moodlexhub {{/str}}</a>{{/enrolurl}}
+        {{#gradesurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} gradesdiagnostics, local_moodlexhub {{/str}}</a>{{/gradesurl}}
+        {{#storageurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} storage, local_moodlexhub {{/str}}</a>{{/storageurl}}
+        {{#questionsurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} questioncatalogue, local_moodlexhub {{/str}}</a>{{/questionsurl}}
+        {{#feedbackurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} feedback, local_moodlexhub {{/str}}</a>{{/feedbackurl}}
+        {{#copyurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} coursecopy, local_moodlexhub {{/str}}</a>{{/copyurl}}
+    </div>
+    <dl class="moodlexhub-panel">
+        {{#fields}}<dt>{{label}}</dt><dd>{{value}}</dd>{{/fields}}
+    </dl>
+</div>

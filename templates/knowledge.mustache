@@ -1,0 +1,52 @@
+{{!
+    @template local_moodlexhub/knowledge
+
+    Example context (json):
+    {
+        "supporturl": "/local/moodlexhub/support.php",
+        "knowledgeurl": "/local/moodlexhub/knowledge.php"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{supporturl}}">{{#str}} support, local_moodlexhub {{/str}}</a>
+        {{#article}}<a class="btn btn-outline-secondary" href="{{knowledgeurl}}">{{#str}} knowledge, local_moodlexhub {{/str}}</a>{{/article}}
+        {{#createurl}}<a class="btn btn-primary" href="{{.}}">{{#str}} knowledgecreate, local_moodlexhub {{/str}}</a>{{/createurl}}
+    </div>
+    {{#article}}
+        <article class="moodlexhub-panel">
+            <p>{{category}} · {{type}}{{#draft}} · {{#str}} knowledgedraft, local_moodlexhub {{/str}}{{/draft}}</p>
+            {{#editurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} knowledgeedit, local_moodlexhub {{/str}}</a>{{/editurl}}
+            {{{body}}}
+        </article>
+    {{/article}}
+    {{^article}}
+        <form class="moodlexhub-filters" method="get" action="{{knowledgeurl}}">
+            <div>
+                <label for="moodlexhub-knowledge-search">{{#str}} search {{/str}}</label>
+                <input type="search" class="form-control" id="moodlexhub-knowledge-search" name="search" value="{{search}}">
+            </div>
+            <div>
+                <label for="moodlexhub-knowledge-category">{{#str}} category {{/str}}</label>
+                <select name="category" class="form-select" id="moodlexhub-knowledge-category">
+                    {{#categories}}<option value="{{key}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/categories}}
+                </select>
+            </div>
+            <div>
+                <label for="moodlexhub-knowledge-type">{{#str}} knowledgetype, local_moodlexhub {{/str}}</label>
+                <select name="type" class="form-select" id="moodlexhub-knowledge-type">
+                    {{#types}}<option value="{{key}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/types}}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+        </form>
+        {{#hasrows}}
+            <ul class="moodlexhub-list">
+                {{#rows}}
+                    <li><a href="{{url}}">{{title}}</a> · {{category}} · {{type}}{{#draft}} · {{#str}} knowledgedraft, local_moodlexhub {{/str}}{{/draft}}</li>
+                {{/rows}}
+            </ul>
+        {{/hasrows}}
+        {{^hasrows}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasrows}}
+    {{/article}}
+</div>

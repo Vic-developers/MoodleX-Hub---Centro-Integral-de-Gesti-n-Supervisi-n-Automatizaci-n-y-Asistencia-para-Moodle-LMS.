@@ -1,0 +1,39 @@
+{{!
+    @template local_moodlexhub/category
+
+    Example context (json):
+    {"action":"/local/moodlexhub/category.php","view":"storage"}
+}}
+<div class="moodlexhub">
+    <div><a class="btn btn-outline-secondary" href="{{backurl}}">{{#str}} back {{/str}}</a></div>
+    <form class="moodlexhub-filters" action="{{action}}" method="get">
+        <input type="hidden" name="view" value="{{view}}">
+        <div>
+            <label for="moodlexhub-category">{{#str}} category {{/str}}</label>
+            <select name="category" id="moodlexhub-category" class="form-select">
+                {{#categories}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/categories}}
+            </select>
+        </div>
+        {{#analytics}}
+            <div>
+                <label for="moodlexhub-category-teacher">{{#str}} categoryteacherid, local_moodlexhub {{/str}}</label>
+                <input name="teacher" id="moodlexhub-category-teacher" type="number" min="1" class="form-control" value="{{teacher}}">
+            </div>
+            <div>
+                <label for="moodlexhub-category-days">{{#str}} academicperioddays, local_moodlexhub {{/str}}</label>
+                <select name="days" id="moodlexhub-category-days" class="form-select">
+                    {{#intervals}}<option value="{{key}}" {{#selected}}selected{{/selected}}>{{key}}</option>{{/intervals}}
+                </select>
+            </div>
+        {{/analytics}}
+        <button type="submit" class="btn btn-primary">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+    </form>
+    {{#hasmetrics}}
+        <p>{{#str}} categoryphysical, local_moodlexhub {{/str}}</p>
+        <dl class="moodlexhub-metrics">
+            {{#metrics}}<div class="moodlexhub-panel"><dt>{{name}}</dt><dd>{{value}}</dd></div>{{/metrics}}
+        </dl>
+    {{/hasmetrics}}
+    {{#hascategory}}{{#report}}{{> local_moodlexhub/report_table }}{{/report}}{{/hascategory}}
+    {{^hascategory}}<p>{{#str}} categorychoose, local_moodlexhub {{/str}}</p>{{/hascategory}}
+</div>

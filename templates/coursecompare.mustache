@@ -1,0 +1,20 @@
+{{!
+    @template local_moodlexhub/coursecompare
+
+    Example context (json):
+    {"courseurl":"/local/moodlexhub/course.php?id=2","action":"/local/moodlexhub/coursecompare.php","id":2}
+}}
+<div class="moodlexhub">
+    <div><a class="btn btn-outline-secondary" href="{{courseurl}}">{{#str}} courseoverview, local_moodlexhub {{/str}}</a></div>
+    <form class="moodlexhub-filters" method="get" action="{{action}}">
+        <input type="hidden" name="id" value="{{id}}">
+        <div>
+            <label for="moodlexhub-course-compare">{{#str}} coursecompare, local_moodlexhub {{/str}}</label>
+            <select class="form-select" name="other" id="moodlexhub-course-compare">
+                {{#options}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/options}}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">{{#str}} coursecompare, local_moodlexhub {{/str}}</button>
+    </form>
+    {{#report}}{{> local_moodlexhub/report_table }}{{/report}}
+</div>

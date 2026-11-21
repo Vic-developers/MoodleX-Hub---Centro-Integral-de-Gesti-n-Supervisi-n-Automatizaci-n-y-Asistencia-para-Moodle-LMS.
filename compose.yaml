@@ -1,0 +1,37 @@
+services:
+  database:
+    image: mariadb:11.4
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+      MARIADB_DATABASE: moodlexhub
+      MARIADB_USER: moodlexhub
+      MARIADB_PASSWORD: ${LAB_DB_PASSWORD:-MoodleX-Lab-Only-Db}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - database:/var/lib/mysql
+
+  moodle:
+    build:
+      context: .
+      dockerfile: tools/lab/Dockerfile
+      args:
+        MOODLE_TAG: ${MOODLE_TAG:-v5.3.1}
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      LAB_DB_PASSWORD: ${LAB_DB_PASSWORD:-MoodleX-Lab-Only-Db}
+      LAB_ADMIN_PASSWORD: ${LAB_ADMIN_PASSWORD:-MoodleX-Lab-Only-Admin1!}
+      LAB_WWWROOT: http://localhost:${LAB_PORT:-8053}
+    ports:
+      - "127.0.0.1:${LAB_PORT:-8053}:80"
+    volumes:
+      - moodledata:/var/moodledata
+
+volumes:
+  database:
+  moodledata:

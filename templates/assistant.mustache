@@ -1,0 +1,23 @@
+{{!
+    @template local_moodlexhub/assistant
+
+    Example context (json):
+    {
+        "dashboardurl": "/local/moodlexhub/index.php"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{dashboardurl}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a>
+        {{#providerurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} assistantproviders, local_moodlexhub {{/str}}</a>{{/providerurl}}
+        {{#testurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} assistantmode_connection, local_moodlexhub {{/str}}</a>{{/testurl}}
+    </div>
+    <p>{{#str}} assistantprivacy, local_moodlexhub {{/str}}</p>
+    {{#answer}}
+        <section class="moodlexhub-panel" aria-labelledby="moodlexhub-ai-answer">
+            <h2 id="moodlexhub-ai-answer">{{#str}} assistantanswer, local_moodlexhub {{/str}}</h2>
+            <p class="moodlexhub-note">{{.}}</p>
+        </section>
+    {{/answer}}
+    {{#history}}{{> local_moodlexhub/report_table }}{{/history}}
+</div>

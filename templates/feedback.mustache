@@ -1,0 +1,56 @@
+{{!
+    @template local_moodlexhub/feedback
+
+    Example context (json):
+    {
+        "newurl": "/local/moodlexhub/feedback_edit.php?courseid=2",
+        "action": "/local/moodlexhub/feedback.php",
+        "courseid": 2
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{academicurl}}">{{#str}} teacherpanel, local_moodlexhub {{/str}}</a>
+        {{#template}}<a class="btn btn-outline-secondary" href="{{listurl}}">{{#str}} feedback, local_moodlexhub {{/str}}</a>{{/template}}
+        <a class="btn btn-primary" href="{{newurl}}">{{#str}} feedbackcreate, local_moodlexhub {{/str}}</a>
+    </div>
+    {{#template}}
+        <section class="moodlexhub-panel" aria-labelledby="moodlexhub-feedback-title">
+            <h2 id="moodlexhub-feedback-title">{{title}}</h2>
+            <p>{{type}}{{#category}} · {{.}}{{/category}}</p>
+            <textarea class="form-control mb-3" aria-label="{{#str}} feedbackbody, local_moodlexhub {{/str}}" rows="10" readonly>{{body}}</textarea>
+            <div class="moodlexhub-actions">
+                {{#editurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} knowledgeedit, local_moodlexhub {{/str}}</a>{{/editurl}}
+                <a class="btn btn-outline-secondary" href="{{drafturl}}">{{#str}} feedbackdraftfrom, local_moodlexhub {{/str}}</a>
+                {{#assignurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} feedbackassignmentopen, local_moodlexhub {{/str}}</a>{{/assignurl}}
+                <form method="post" action="{{posturl}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    {{#favourite}}<button name="favourite" value="0" class="btn btn-outline-secondary">{{#str}} studentremovefavourite, local_moodlexhub {{/str}}</button>{{/favourite}}
+                    {{^favourite}}<button name="favourite" value="1" class="btn btn-outline-secondary">{{#str}} studentaddfavourite, local_moodlexhub {{/str}}</button>{{/favourite}}
+                </form>
+            </div>
+        </section>
+    {{/template}}
+    {{^template}}
+        <form class="moodlexhub-filters" method="get" action="{{action}}">
+            <input type="hidden" name="id" value="{{courseid}}">
+            <div>
+                <label for="moodlexhub-feedback-search">{{#str}} search {{/str}}</label>
+                <input class="form-control" name="search" type="search" id="moodlexhub-feedback-search" value="{{search}}">
+            </div>
+            <div>
+                <label for="moodlexhub-feedback-filter">{{#str}} filters {{/str}}</label>
+                <select class="form-select" name="filter" id="moodlexhub-feedback-filter">
+                    {{#filters}}<option value="{{key}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/filters}}
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
+        </form>
+        {{#hasrows}}
+            <ul class="moodlexhub-list">{{#rows}}
+                <li><a href="{{url}}">{{title}}</a> · {{type}}{{#category}} · {{.}}{{/category}} · {{date}}</li>
+            {{/rows}}</ul>
+        {{/hasrows}}
+        {{^hasrows}}<p>{{#str}} reportnodata, local_moodlexhub {{/str}}</p>{{/hasrows}}
+    {{/template}}
+</div>

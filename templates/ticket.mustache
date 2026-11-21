@@ -1,0 +1,40 @@
+{{!
+    @template local_moodlexhub/ticket
+
+    Example context (json):
+    {
+        "listurl": "/local/moodlexhub/support.php",
+        "subject": "Assignment question",
+        "body": "Please help with this activity.",
+        "status": "New",
+        "priority": "Normal"
+    }
+}}
+<div class="moodlexhub">
+    <div class="moodlexhub-actions">
+        <a class="btn btn-outline-secondary" href="{{listurl}}">{{#str}} ticketlist, local_moodlexhub {{/str}}</a>
+    </div>
+    <article class="moodlexhub-panel">
+        <h2>{{subject}}</h2>
+        <p>{{date}} · {{status}} · {{priority}}</p>
+        <p class="moodlexhub-note">{{body}}</p>
+        {{#hasfiles}}
+            <h3>{{#str}} ticketattachments, local_moodlexhub {{/str}}</h3>
+            <ul>{{#files}}<li><a href="{{url}}">{{name}}</a></li>{{/files}}</ul>
+        {{/hasfiles}}
+    </article>
+    {{#hasposts}}
+        <section aria-labelledby="moodlexhub-ticket-history">
+            <h2 id="moodlexhub-ticket-history">{{#str}} tickethistory, local_moodlexhub {{/str}}</h2>
+            {{#posts}}
+                <article class="moodlexhub-panel">
+                    <p>{{author}} · {{date}}</p>
+                    {{#statuschange}}<p>{{#str}} ticketstatus, local_moodlexhub {{/str}} · {{.}}</p>{{/statuschange}}
+                    {{#prioritychange}}<p>{{#str}} ticketpriority, local_moodlexhub {{/str}} · {{.}}</p>{{/prioritychange}}
+                    {{#assignmentchanged}}<p>{{#str}} ticketassigneechanged, local_moodlexhub {{/str}}</p>{{/assignmentchanged}}
+                    {{#body}}<p class="moodlexhub-note">{{.}}</p>{{/body}}
+                </article>
+            {{/posts}}
+        </section>
+    {{/hasposts}}
+</div>
