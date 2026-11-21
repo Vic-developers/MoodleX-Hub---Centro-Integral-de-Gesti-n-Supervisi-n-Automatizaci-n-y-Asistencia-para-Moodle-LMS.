@@ -43,6 +43,8 @@ En GitHub Actions pasaron la instalación, la validación XMLDB, PHPUnit y Behat
 
 En Moodle 5.3.1, PHPUnit pasó con 25 pruebas y 119 aserciones. Los casos nuevos comprueban el aislamiento de grupos, la cola de casos abiertos y cerrados, la deduplicación y el borrado de datos personales. La evidencia usa una Tarea con extensión y entrega real, un intento de ensayo pendiente de corrección manual y un foro con finalización de Moodle.
 
-La actualización de la beta 3 desde el ZIP y la comprobación del esquema fueron correctas. Behat pasó con 7 escenarios y 81 pasos en Moodle 5.3.1. El recorrido de seguimiento abrió un caso como docente, asignó responsable, guardó una intervención y verificó su aparición en la cola de cerrados.
+La actualización de la beta 3 desde el ZIP y la comprobación del esquema fueron correctas en Moodle 5.0.12, 5.1.9, 5.2.5 y 5.3.1. Behat pasó con 7 escenarios y 81 pasos en Moodle 5.3.1. El recorrido de seguimiento abrió un caso como docente, asignó responsable, guardó una intervención y verificó su aparición en la cola de cerrados.
+
+La [matriz de GitHub Actions de la beta 4](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44897628672) confirmó una instalación limpia, la validación XMLDB y las suites PHPUnit y Behat en las cuatro ramas.
 
 Consulta los comandos en [TESTING.md](TESTING.md) y los criterios de distribución en [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
