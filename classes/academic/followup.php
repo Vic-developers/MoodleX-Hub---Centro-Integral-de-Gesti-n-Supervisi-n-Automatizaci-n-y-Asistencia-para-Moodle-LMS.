@@ -300,10 +300,16 @@ final class followup {
             $change = (object) ['id' => $id, 'timemodified' => time()];
             if (in_array($action, ['take', 'release', 'assign'], true)) {
                 $change->assignee = $action === 'take' ? $USER->id : ($action === 'assign' && $assignee ? $assignee : null);
+                if ((int) $change->assignee === (int) $case->assignee) {
+                    return;
+                }
                 $change->reminded = 0;
             }
             if ($action === 'review') {
                 $change->reviewdue = max(0, $reviewdue);
+                if ($change->reviewdue === (int) $case->reviewdue) {
+                    return;
+                }
                 $change->reminded = 0;
                 $note = $reviewdue ? userdate($reviewdue) : '';
             }

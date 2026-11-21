@@ -173,9 +173,12 @@ final class followup_test extends advanced_testcase {
         $this->assertEquals([$id], array_column($service->queue($course, 0, 'unassigned', 0, 0, 10)['rows'], 'id'));
         $this->assertFalse($service->can_handle($course, $service->get($course, 0, $id), $outsider->id));
         $service->update($course, 0, $id, 'assign', '', $teacher->id);
-        $service->update($course, 0, $id, 'review', '', 0, time() - 10);
+        $due = time() - 10;
+        $service->update($course, 0, $id, 'review', '', 0, $due);
         set_config('followupreminderdays', 1, 'local_moodlexhub');
         (new followup_reminders())->execute();
+        $service->update($course, 0, $id, 'assign', '', $teacher->id);
+        $service->update($course, 0, $id, 'review', '', 0, $due);
         (new followup_reminders())->execute();
         $this->assertGreaterThan(0, $service->get($course, 0, $id)->reminded);
         $reminders = array_values($sink->get_messages_by_component_and_type('local_moodlexhub', 'followupreminder'));
