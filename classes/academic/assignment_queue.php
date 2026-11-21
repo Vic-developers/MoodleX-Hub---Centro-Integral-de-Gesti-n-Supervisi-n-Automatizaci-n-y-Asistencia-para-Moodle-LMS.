@@ -50,7 +50,7 @@ final class assignment_queue {
             if ($cm->deletioninprogress || !$cm->uservisible || !has_capability('mod/assign:grade', $cm->context)) {
                 continue;
             }
-            $restricted = groups_get_activity_groupmode($cm) === SEPARATEGROUPS
+            $restricted = (int) groups_get_activity_groupmode($cm) === SEPARATEGROUPS
                 && !has_capability('moodle/site:accessallgroups', $cm->context);
             $group = $coursegroup > 0 ? $coursegroup : 0;
             $allowedgroups = groups_get_activity_allowed_groups($cm, $USER->id);

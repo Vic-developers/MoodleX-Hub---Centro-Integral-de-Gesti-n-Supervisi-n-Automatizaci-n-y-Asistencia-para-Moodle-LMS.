@@ -87,7 +87,7 @@ final class engine {
         }
         if ($rule->conditiontype === 'inactive') {
             $context = (new course_metrics())->require_access($course, course_metrics::ANALYTICS);
-            if (groups_get_course_groupmode($course) === SEPARATEGROUPS) {
+            if ((int) groups_get_course_groupmode($course) === SEPARATEGROUPS) {
                 require_capability('moodle/site:accessallgroups', $context);
             }
         }

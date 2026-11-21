@@ -128,7 +128,10 @@ if ($storage && $eligible) {
     foreach ($DB->get_records_list('course', 'id', array_keys($list), 'sortorder ASC, id ASC') as $course) {
         $context = context_course::instance($course->id);
         $name = html_to_text(format_string($course->fullname, true, ['context' => $context]), 0, false);
-        if (groups_get_course_groupmode($course) === SEPARATEGROUPS && !has_capability('moodle/site:accessallgroups', $context)) {
+        if (
+            (int) groups_get_course_groupmode($course) === SEPARATEGROUPS
+            && !has_capability('moodle/site:accessallgroups', $context)
+        ) {
             $rows[] = ['cells' => [$name, $none, $none, $none]];
             continue;
         }

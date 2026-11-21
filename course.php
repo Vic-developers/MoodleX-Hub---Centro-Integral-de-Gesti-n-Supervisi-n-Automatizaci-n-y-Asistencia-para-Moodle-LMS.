@@ -65,7 +65,7 @@ if ($contacts) {
 if (has_capability('moodle/course:viewparticipants', $context)) {
     $group = groups_get_course_group($course, true);
     if (
-        $group || groups_get_course_groupmode($course) !== SEPARATEGROUPS
+        $group || (int) groups_get_course_groupmode($course) !== SEPARATEGROUPS
         || has_capability('moodle/site:accessallgroups', $context)
     ) {
         $fields[] = ['label' => $label('activeenrolments'), 'value' => count_enrolled_users($context, '', $group, true)];

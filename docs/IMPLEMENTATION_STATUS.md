@@ -1,6 +1,6 @@
 # Estado de implementación
 
-Fase actual de validación y distribución de `0.1.0-beta.2`. El código contiene flujos funcionales en los 17 módulos. La guía de uso describe las operaciones disponibles y los resultados identifican las pruebas ejecutadas por compilación.
+Fase actual de validación y distribución de `0.1.0-beta.3`. El código contiene flujos funcionales en los 17 módulos. La guía de uso describe las operaciones disponibles y los resultados identifican las pruebas ejecutadas por compilación.
 
 | Módulo | Alcance presente |
 |---|---|

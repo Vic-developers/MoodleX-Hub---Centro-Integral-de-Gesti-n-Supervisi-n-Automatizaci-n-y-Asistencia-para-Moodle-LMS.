@@ -76,7 +76,7 @@ final class builder {
             'grades' => (new diagnostics())->require_access($course),
             'learners' => (new course_metrics())->require_access($course, course_metrics::ANALYTICS),
         };
-        if ($source === 'learners' && groups_get_course_groupmode($course) === SEPARATEGROUPS) {
+        if ($source === 'learners' && (int) groups_get_course_groupmode($course) === SEPARATEGROUPS) {
             require_capability('moodle/site:accessallgroups', $context);
         }
         return $course;

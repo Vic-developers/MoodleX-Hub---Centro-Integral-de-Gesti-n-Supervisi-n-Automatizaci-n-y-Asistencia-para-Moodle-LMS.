@@ -58,7 +58,11 @@ final class tickets_test extends advanced_testcase {
 
         $this->setAdminUser();
         $service->update($id, (object) ['status' => 'assigned', 'body' => '', 'assignedto' => $agent->id]);
+        $unassignedid = $service->create((object) ['subject' => 'Separate ticket', 'body' => 'Another request', 'priority' => 'normal']);
         $this->setUser($agent);
+        $unassigned = $DB->get_record(tickets::TABLE, ['id' => $unassignedid], '*', MUST_EXIST);
+        $this->assertFalse($service->can_access($unassigned, $agent->id));
+        $this->assertFalse(has_capability(tickets::MANAGE, $system));
         $service->update($id, (object) ['status' => 'inprogress', 'body' => 'Working on it.']);
         $updated = $DB->get_record(tickets::TABLE, ['id' => $id], '*', MUST_EXIST);
         $this->assertSame('inprogress', $updated->status);

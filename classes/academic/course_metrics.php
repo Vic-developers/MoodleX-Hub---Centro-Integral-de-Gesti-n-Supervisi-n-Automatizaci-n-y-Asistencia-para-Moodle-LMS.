@@ -68,7 +68,7 @@ final class course_metrics {
      */
     public function group_scope(stdClass $course, context_course $context, int $requested): array {
         global $USER;
-        $restricted = groups_get_course_groupmode($course) === SEPARATEGROUPS
+        $restricted = (int) groups_get_course_groupmode($course) === SEPARATEGROUPS
             && !has_capability('moodle/site:accessallgroups', $context);
         $groups = groups_get_all_groups($course->id, $restricted ? $USER->id : 0);
         if ($requested && !isset($groups[$requested])) {

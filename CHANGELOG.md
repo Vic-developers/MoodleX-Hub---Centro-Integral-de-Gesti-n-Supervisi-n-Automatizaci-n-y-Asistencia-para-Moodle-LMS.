@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0-beta.3
+
+- Corrige la aplicación del modo de grupos separados cuando Moodle devuelve el valor como texto.
+- Amplía las pruebas de los permisos de docencia, coordinación de categoría y soporte.
+
 ## 0.1.0-beta.2
 
 - Filtro de estado de la versión en el diagnóstico del banco de preguntas.
