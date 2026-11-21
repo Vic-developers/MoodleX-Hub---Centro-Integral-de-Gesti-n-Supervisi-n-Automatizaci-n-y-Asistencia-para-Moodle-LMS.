@@ -6,7 +6,7 @@ La versión `0.1.0-beta.2` está destinada a pruebas en un sitio independiente. 
 
 ## Instalar y abrir
 
-1. Verifica los [requisitos y la matriz de compatibilidad](docs/COMPATIBILITY.md). Para la primera prueba, usa Moodle 5.3.1 y PHP 8.3.
+1. Descarga el [artefacto de instalación verificado](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44891421793/artifacts/14702227718) y extrae `moodlexhub-0.1.0-beta.2.zip`. Para la primera prueba, usa Moodle 5.3.1 y PHP 8.3. Consulta la [matriz de compatibilidad](docs/COMPATIBILITY.md).
 2. Consulta la [guía de instalación](docs/INSTALLATION.md) para aplicar las migraciones. El contenido del plugin se coloca en `local/moodlexhub` para Moodle 5.0 y en `public/local/moodlexhub` desde Moodle 5.1.
 3. Abre `/local/moodlexhub/index.php` relativo a tu sitio Moodle o busca **MoodleX Hub** en **Administración del sitio → Extensiones → Extensiones locales**.
 

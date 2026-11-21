@@ -21,4 +21,10 @@ Las suites cubren acceso y visibilidad del catálogo, reglas y lotes de auditor�
 - **Behat.** Una ejecución local reutilizó la versión anterior del recorrido y abrió el banco nativo de Moodle. La matriz limpia pasó con el selector del plugin. La ejecución de desarrollo en 5.0 y 5.1 detectó un identificador de idioma inexistente en el diagnóstico de calificaciones, corregido antes del primer commit.
 - **Escala y alcance.** La suite verifica un lote CSV ampliado con filas repetidas. Quedan por medir tiempos y consumo en instalaciones grandes y por completar la cobertura visual, de accesibilidad y de integraciones externas.
 
+## Beta 2
+
+- **Moodle 5.3.1.** La CLI actualizó la instalación a la compilación `2026112019` desde el ZIP y comprobó el esquema. PHPUnit pasó con 21 pruebas y 79 aserciones, incluidas las dos comprobaciones del filtro de estado del banco de preguntas. Behat pasó con 6 escenarios y 58 pasos.
+- **Copia asíncrona, Moodle 5.3.1.** La ficha del plugin abrió el formulario nativo de copia de Moodle. La prueba ejecutó la tarea nativa de backup y restore, verificó que se creó un curso distinto y comprobó la categoría y la visibilidad de destino.
+- **GitHub Actions.** Pasaron PHPUnit, Behat, la instalación y la validación de XMLDB en Moodle 5.0.12, 5.1.9, 5.2.5 y 5.3.1. Pasaron también Moodle Code Checker y PHPDoc Checker en 5.3.1. Consulta la [matriz de la beta 2](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44891421793) y descarga el [artefacto con el ZIP instalable](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44891421793/artifacts/14702227718).
+
 Consulta los comandos en [TESTING.md](TESTING.md) y los criterios de distribución en [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
