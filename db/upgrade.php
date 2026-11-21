@@ -424,5 +424,28 @@ function xmldb_local_moodlexhub_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026112021, 'local', 'moodlexhub');
     }
 
+    if ($oldversion < 2026112022) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_moodlexhub_followup');
+        foreach (['occurrence', 'reviewdue', 'reminded'] as $name) {
+            $field = new xmldb_field($name, XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        }
+        $oldindex = new xmldb_index('evidence', XMLDB_INDEX_UNIQUE, ['courseid', 'userid', 'cmid', 'reason']);
+        if ($dbman->index_exists($table, $oldindex)) {
+            $dbman->drop_index($table, $oldindex);
+        }
+        $episode = new xmldb_index('evidence-episode', XMLDB_INDEX_UNIQUE, ['courseid', 'userid', 'cmid', 'reason', 'occurrence']);
+        $review = new xmldb_index('review-queue', XMLDB_INDEX_NOTUNIQUE, ['status', 'reviewdue']);
+        foreach ([$episode, $review] as $index) {
+            if (!$dbman->index_exists($table, $index)) {
+                $dbman->add_index($table, $index);
+            }
+        }
+        upgrade_plugin_savepoint(true, 2026112022, 'local', 'moodlexhub');
+    }
+
     return true;
 }

@@ -103,6 +103,18 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => ['manager' => CAP_ALLOW, 'editingteacher' => CAP_ALLOW, 'teacher' => CAP_ALLOW],
     ],
+    'local/moodlexhub:coordinatefollowup' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => ['manager' => CAP_ALLOW],
+    ],
+    'local/moodlexhub:managequalitytemplates' => [
+        'riskbitmask' => RISK_CONFIG,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSECAT,
+        'archetypes' => ['manager' => CAP_ALLOW],
+    ],
     'local/moodlexhub:usesupport' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',

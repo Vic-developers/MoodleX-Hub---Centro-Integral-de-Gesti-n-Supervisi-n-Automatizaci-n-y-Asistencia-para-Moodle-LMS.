@@ -154,7 +154,7 @@ final class activity_workload {
         $grade = $assignment->get_user_grade($userid, false, $submission->attemptnumber);
         $needsgrade = (int) $instance->grade !== 0
             && (!$grade || $grade->grade === null || $grade->grade < 0 || $grade->timemodified < $submission->timemodified);
-        return ['state' => $needsgrade ? 'grading' : 'done', 'due' => $due];
+        return ['state' => $needsgrade ? 'grading' : 'done', 'due' => $due, 'since' => (int) $submission->timemodified];
     }
 
     /**
@@ -188,7 +188,7 @@ final class activity_workload {
                 $usage = \question_engine::load_questions_usage_by_activity($attempt->uniqueid);
                 foreach ($usage->get_slots() as $slot) {
                     if ($usage->get_question_state($slot) === \question_state::$needsgrading) {
-                        return ['state' => 'grading', 'due' => $due];
+                        return ['state' => 'grading', 'due' => $due, 'since' => (int) $attempt->timefinish];
                     }
                 }
             }

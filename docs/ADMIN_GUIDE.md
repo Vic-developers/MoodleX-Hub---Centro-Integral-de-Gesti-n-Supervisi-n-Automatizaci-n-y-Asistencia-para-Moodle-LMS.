@@ -29,6 +29,8 @@ El prefijo de todas las capacidades de la tabla es `local/moodlexhub:`.
 | Calidad | `auditcourses` y capacidad nativa de actualización en el curso. `managequalityrules` permite definir pesos y retención. |
 | Analítica y docencia | `viewanalytics` o `viewteacher` y acceso nativo a participantes en el curso. Los gráficos, la finalización y el trabajo de calificación aplican sus permisos Moodle respectivos. |
 | Seguimiento académico | `managefollowup` junto con `viewteacher` y acceso a participantes. Se aplica el grupo del curso, los permisos del módulo y la visibilidad de cada actividad. La asignación es voluntaria y la persona responsable puede liberarla. |
+| Coordinación del seguimiento | `coordinatefollowup` en el curso junto con las capacidades de seguimiento. Permite asignar, reasignar y fijar fechas. El destinatario debe tener matrícula activa como personal autorizado y acceso al caso. |
+| Plantillas de auditoría | `managequalitytemplates` en la categoría. Permite guardar criterios locales o volver a los heredados. Las auditorías guardan los pesos y la categoría de origen con cada resultado. |
 | Calificaciones, almacenamiento y banco | `viewgradesdiagnostics`, `viewstorage` o `viewquestions` en el curso. Cada controlador aplica además las capacidades del origen de datos. |
 | Planificador y soporte | `viewstudent` y `usesupport` en el sitio. El acceso al ticket depende del solicitante, de la asignación o de `managetickets`. |
 | Supervisión, automatización y asistente | `viewmonitoring`, `manageautomation`, `useassistant` o `manageai`, según la operación. Las automatizaciones vuelven a comprobar las capacidades al ejecutar. |
@@ -38,5 +40,7 @@ El prefijo de todas las capacidades de la tabla es `local/moodlexhub:`.
 ## Tareas y retención
 
 Moodle cron procesa copias, importaciones, auditorías masivas, almacenamiento, notificaciones, generación de informes, reglas y webhooks. Supervisa el historial en **MoodleX Hub → Supervisión técnica** y la cola detallada en la administración de tareas nativa de Moodle.
+
+Activa los **Recordatorios de revisión académica** en los ajustes generales y elige la anticipación. La tarea comprueba los permisos del responsable y envía un aviso por fecha y asignación. El contenido del aviso es genérico y el enlace abre su bandeja autorizada.
 
 Las reglas de calidad admiten pesos 1, 2 y 3. El valor 0 desactiva la regla. El plazo de retención configurado en esa página se aplica al historial de auditoría y a resultados históricos del plugin. Los metadatos de uso del asistente mantienen su retención de 90 días. Consulte [privacidad](PRIVACY.md) para tickets, notas y CSV.

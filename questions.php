@@ -53,7 +53,22 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($label('questioncatalogue'));
 $PAGE->set_heading($label('questioncatalogue'));
 
-$result = $service->search($scope, $filters, $page * 30, 30);
+$compareid = max(0, optional_param('compare', 0, PARAM_INT));
+$batch = max(0, min(intdiv(PHP_INT_MAX, 200), optional_param('batch', 0, PARAM_INT)));
+$result = $service->search($scope, $filters, $page * 30, 30, $compareid, $batch);
+$comparison = $result['comparison'];
+if ($comparison) {
+    $comparison['previous'] = $batch ? (new moodle_url($url, ['compare' => $compareid, 'batch' => $batch - 1]))->out(false) : '';
+    $comparison['next'] = $comparison['more']
+        ? (new moodle_url($url, ['compare' => $compareid, 'batch' => $batch + 1]))->out(false) : '';
+}
+$comparelinks = [];
+foreach ($result['rows'] as $item) {
+    $comparelinks[] = [
+        'name' => $item['cells'][0],
+        'url' => (new moodle_url($url, ['compare' => $item['entryid'], 'page' => $page]))->out(false),
+    ];
+}
 $typeoptions = [];
 foreach ($result['types'] as $type) {
     $typeoptions[$type] = $service->type_name($type);
@@ -90,6 +105,9 @@ echo $OUTPUT->render_from_template('local_moodlexhub/questions', [
     'courseid' => $course->id,
     'search' => $filters['search'],
     'selectors' => $selectors,
+    'comparison' => $comparison,
+    'comparelinks' => $comparelinks,
+    'hascomparelinks' => (bool) $comparelinks,
     'report' => [
         'title' => $label('questioncatalogue'),
         'headings' => [

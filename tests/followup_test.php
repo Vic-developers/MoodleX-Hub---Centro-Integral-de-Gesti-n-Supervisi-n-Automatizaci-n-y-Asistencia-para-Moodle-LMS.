@@ -31,6 +31,7 @@ use context_module;
 use local_moodlexhub\academic\activity_workload;
 use local_moodlexhub\academic\followup;
 use local_moodlexhub\privacy\followup_records;
+use local_moodlexhub\task\followup_reminders;
 use moodle_exception;
 
 /**
@@ -150,5 +151,60 @@ final class followup_test extends advanced_testcase {
         require_once($CFG->libdir . '/completionlib.php');
         (new completion_info($course))->update_state($activities[$forum->cmid], COMPLETION_COMPLETE, $learner->id);
         $this->assertSame('done', $workload->inspect($course, $activities[$forum->cmid], $learner->id)['state']);
+    }
+
+    /**
+     * Coordinate cases, notify staff, message the learner and recognize new evidence after closure.
+     */
+    public function test_coordination_reminders_and_new_occurrences(): void {
+        global $DB;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $sink = $this->redirectMessages();
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $teacher = $generator->create_user();
+        $student = $generator->create_user();
+        $outsider = $generator->create_user();
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
+        $generator->enrol_user($student->id, $course->id, 'student');
+        $service = new followup();
+        $id = $service->open($course, 0, $student->id, 0);
+        $this->assertEquals([$id], array_column($service->queue($course, 0, 'unassigned', 0, 0, 10)['rows'], 'id'));
+        $this->assertFalse($service->can_handle($course, $service->get($course, 0, $id), $outsider->id));
+        $service->update($course, 0, $id, 'assign', '', $teacher->id);
+        $service->update($course, 0, $id, 'review', '', 0, time() - 10);
+        set_config('followupreminderdays', 1, 'local_moodlexhub');
+        (new followup_reminders())->execute();
+        (new followup_reminders())->execute();
+        $this->assertGreaterThan(0, $service->get($course, 0, $id)->reminded);
+        $reminders = array_values($sink->get_messages_by_component_and_type('local_moodlexhub', 'followupreminder'));
+        $this->assertCount(1, $reminders);
+        $this->assertEquals($teacher->id, $reminders[0]->useridto);
+
+        $this->setUser($teacher);
+        $this->assertEquals([$id], array_column($service->queue($course, 0, 'mine', 0, 0, 10)['rows'], 'id'));
+        $this->assertEquals([$id], array_column($service->queue($course, 0, 'overdue', 0, 0, 10)['rows'], 'id'));
+        $DB->set_field(followup::CASES, 'timecreated', time() - 8 * DAYSECS, ['id' => $id]);
+        $this->assertEquals([$id], array_column($service->queue($course, 0, 'stale', 0, 0, 10)['rows'], 'id'));
+        $service->update($course, 0, $id, 'note', 'Private intervention');
+        $this->assertSame([], $service->queue($course, 0, 'stale', 0, 0, 10)['rows']);
+        $service->update($course, 0, $id, 'message', 'Please review your course.');
+        $message = $DB->get_field(followup::HISTORY, 'note', ['caseid' => $id, 'action' => 'message'], MUST_EXIST);
+        $this->assertStringContainsString('Please review your course.', $message);
+        $this->assertStringContainsString('/course/view.php?id=', $message);
+        $this->assertStringNotContainsString('Private intervention', $message);
+        $service->update($course, 0, $id, 'close', 'Reviewed access.');
+        $this->assertSame($id, $service->open($course, 0, $student->id, 0));
+
+        // Age the closure and simulate a later access followed by more than 14 days of inactivity.
+        $DB->set_field(followup::CASES, 'timemodified', time() - 20 * DAYSECS, ['id' => $id]);
+        $DB->insert_record('user_lastaccess', ['userid' => $student->id, 'courseid' => $course->id, 'timeaccess' => time() - 16 * DAYSECS]);
+        $newid = $service->open($course, 0, $student->id, 0);
+        $this->assertNotSame($id, $newid);
+        $this->assertSame('recurrent', $DB->get_field(followup::HISTORY, 'action', ['caseid' => $newid], MUST_EXIST));
+        $this->assertSame('closed', $service->get($course, 0, $id)->status);
+        $this->assertFalse($service->can_reopen($service->get($course, 0, $id)));
+        $sink->close();
     }
 }

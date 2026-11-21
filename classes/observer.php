@@ -24,6 +24,7 @@
 
 namespace local_moodlexhub;
 
+use core\event\course_category_deleted;
 use core\event\course_deleted;
 use core\event\course_module_deleted;
 use local_moodlexhub\enrol\imports;
@@ -36,6 +37,15 @@ use local_moodlexhub\report\snapshots;
  * Remove plugin data that belongs to a deleted course.
  */
 final class observer {
+    /**
+     * Remove a deleted category's quality template.
+     *
+     * @param course_category_deleted $event Category deletion event.
+     */
+    public static function course_category_deleted(course_category_deleted $event): void {
+        unset_config('qualitytemplate_' . $event->objectid, 'local_moodlexhub');
+    }
+
     /**
      * Drop audit records after Moodle deletes their course.
      *

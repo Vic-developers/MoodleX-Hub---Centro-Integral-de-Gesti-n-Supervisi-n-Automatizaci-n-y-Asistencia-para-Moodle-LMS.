@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_moodlexhub';
-$plugin->version = 2026112021;
+$plugin->version = 2026112022;
 $plugin->requires = 2025041400;
 $plugin->supported = [500, 503];
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.1.0-beta.4';
+$plugin->release = '0.1.0-beta.5';

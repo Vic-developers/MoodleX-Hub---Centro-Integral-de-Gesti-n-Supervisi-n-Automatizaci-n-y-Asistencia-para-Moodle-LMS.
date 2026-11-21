@@ -12,6 +12,7 @@
 <div class="moodlexhub">
     <div class="moodlexhub-actions">
         <a class="btn btn-outline-secondary" href="{{courseurl}}">{{course}}</a>
+        {{#templateurl}}<a class="btn btn-outline-secondary" href="{{.}}">{{#str}} qualitytemplate, local_moodlexhub {{/str}}</a>{{/templateurl}}
         <form method="post" action="{{action}}">
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <button class="btn btn-primary" type="submit" name="run" value="1">{{#str}} runaudit, local_moodlexhub {{/str}}</button>

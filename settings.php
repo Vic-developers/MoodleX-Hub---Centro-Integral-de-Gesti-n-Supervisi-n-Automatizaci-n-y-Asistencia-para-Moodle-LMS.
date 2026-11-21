@@ -44,6 +44,13 @@ if (has_capability('local/moodlexhub:manageconfiguration', context_system::insta
             1,
         ));
         $settings->add(new admin_setting_configselect(
+            'local_moodlexhub/followupreminderdays',
+            get_string('followupreminders', 'local_moodlexhub'),
+            get_string('followupreminderdesc', 'local_moodlexhub'),
+            0,
+            [0 => get_string('disabled', 'local_moodlexhub'), 1 => '1', 2 => '2', 3 => '3', 7 => '7'],
+        ));
+        $settings->add(new admin_setting_configselect(
             'local_moodlexhub/importbatchsize',
             get_string('importbatchsize', 'local_moodlexhub'),
             get_string('importbatchsize_desc', 'local_moodlexhub'),
@@ -79,6 +86,12 @@ if (has_capability('local/moodlexhub:manageconfiguration', context_system::insta
         }
     }
     $ADMIN->add('localplugins', $modules);
+    $ADMIN->add('localplugins', new admin_externalpage(
+        'local_moodlexhub_setup',
+        get_string('setupwizard', 'local_moodlexhub'),
+        new moodle_url('/local/moodlexhub/setup_wizard.php'),
+        'local/moodlexhub:manageconfiguration',
+    ));
 }
 
 if (has_capability('local/moodlexhub:managequalityrules', context_system::instance())) {
@@ -109,6 +122,12 @@ if (has_capability('local/moodlexhub:managequalityrules', context_system::instan
         ));
     }
     $ADMIN->add('localplugins', $qualitysettings);
+    $ADMIN->add('localplugins', new admin_externalpage(
+        'local_moodlexhub_qualitytemplates',
+        get_string('qualitytemplate', 'local_moodlexhub'),
+        new moodle_url('/local/moodlexhub/quality_template.php'),
+        'local/moodlexhub:managequalitytemplates',
+    ));
 }
 
 if (has_capability('local/moodlexhub:manageai', context_system::instance())) {

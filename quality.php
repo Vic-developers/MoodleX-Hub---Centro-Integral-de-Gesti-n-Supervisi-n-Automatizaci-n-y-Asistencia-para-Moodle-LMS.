@@ -25,6 +25,7 @@
 require_once(__DIR__ . '/../../config.php');
 
 use local_moodlexhub\quality\auditor;
+use local_moodlexhub\quality\category_template;
 
 require_login(null, false);
 $course = get_course(required_param('id', PARAM_INT));
@@ -88,6 +89,8 @@ if ($audit) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_moodlexhub/quality', [
+    'templateurl' => has_capability(category_template::CAPABILITY, context_coursecat::instance($course->category))
+        ? (new moodle_url('/local/moodlexhub/quality_template.php', ['category' => $course->category]))->out(false) : null,
     'course' => html_to_text(format_string($course->fullname, true, ['context' => $context]), 0, false),
     'courseurl' => (new moodle_url('/local/moodlexhub/course.php', ['id' => $course->id]))->out(false),
     'action' => $url->out(false),

@@ -33,7 +33,8 @@ require_login($course, false);
 $requestedgroup = max(0, optional_param('group', 0, PARAM_INT));
 $cmid = max(0, optional_param('cmid', 0, PARAM_INT));
 $view = optional_param('view', 'evidence', PARAM_ALPHA);
-if (!in_array($view, ['evidence', 'open', 'closed'], true)) {
+$views = ['evidence', 'open', 'mine', 'unassigned', 'overdue', 'stale', 'closed'];
+if (!in_array($view, $views, true)) {
     throw new invalid_parameter_exception();
 }
 $caseid = max(0, optional_param('caseid', 0, PARAM_INT));
@@ -57,7 +58,27 @@ if (data_submitted()) {
     if ($action === 'open') {
         $caseid = $service->open($course, $requestedgroup, required_param('learner', PARAM_INT), $cmid);
     } else {
-        $service->update($course, $requestedgroup, $caseid, $action, optional_param('note', '', PARAM_RAW_TRIMMED));
+        $reviewdue = 0;
+        if ($action === 'review') {
+            $date = optional_param('reviewdate', '', PARAM_TEXT);
+            $parsed = $date === '' ? null : DateTimeImmutable::createFromFormat('!Y-m-d', $date, core_date::get_user_timezone_object());
+            if ($date !== '' && (!$parsed || $parsed->format('Y-m-d') !== $date)) {
+                throw new invalid_parameter_exception();
+            }
+            $reviewdue = $parsed ? $parsed->modify('+1 day')->getTimestamp() - 1 : 0;
+        }
+        if ($action === 'message' && !optional_param('confirmmessage', 0, PARAM_BOOL)) {
+            throw new moodle_exception('followupconfirmrequired', 'local_moodlexhub');
+        }
+        $service->update(
+            $course,
+            $requestedgroup,
+            $caseid,
+            $action,
+            optional_param('note', '', PARAM_RAW_TRIMMED),
+            max(0, optional_param('assignee', 0, PARAM_INT)),
+            $reviewdue,
+        );
     }
     redirect(new moodle_url($url, ['caseid' => $caseid]));
 }
@@ -99,6 +120,16 @@ if ($case) {
     }
     $assignee = $case->assignee ? core_user::get_user($case->assignee) : null;
     $open = $case->status === 'open';
+    $coordinator = $open && has_capability(followup::COORDINATE, $context);
+    $candidates = [];
+    if ($coordinator) {
+        foreach (get_enrolled_users($context, followup::CAPABILITY, 0, 'u.*', 'u.lastname, u.firstname', 0, 0, true) as $staff) {
+            if ($service->can_handle($course, $case, $staff->id, max(0, $group))) {
+                $candidates[] = ['id' => $staff->id, 'name' => fullname($staff), 'selected' => $staff->id == $case->assignee];
+            }
+        }
+    }
+    $timezone = core_date::get_user_timezone_object();
     $detail = [
         'id' => $caseid,
         'learner' => fullname($learner),
@@ -108,8 +139,15 @@ if ($case) {
         'activity' => $details ? html_to_text($details->get_formatted_name(), 0, false) : '',
         'activityurl' => $details ? $workload->review_url($details, $group) : '',
         'open' => $open,
+        'caneditnote' => $open || $service->can_reopen($case),
         'cantake' => $open && !$case->assignee,
         'canrelease' => $open && (int) $case->assignee === (int) $USER->id,
+        'canassign' => $coordinator,
+        'candidates' => $candidates,
+        'canreview' => $coordinator || ($open && (int) $case->assignee === (int) $USER->id),
+        'reviewdate' => $case->reviewdue ? (new DateTimeImmutable('@' . $case->reviewdue))->setTimezone($timezone)->format('Y-m-d') : '',
+        'reviewlabel' => $case->reviewdue ? userdate($case->reviewdue) : '',
+        'canmessage' => $open && \core_message\api::can_send_message($case->userid, $USER->id),
         'history' => $history,
     ];
     $pager = $renderer->paging_bar(
@@ -128,6 +166,7 @@ if ($case) {
             'reason' => $label('followupstate_' . $entry->reason),
             'activity' => $activity ? html_to_text($activity->get_formatted_name(), 0, false) : $label('followupaccess'),
             'time' => userdate($entry->timemodified),
+            'review' => $entry->reviewdue ? userdate($entry->reviewdue) : '',
             'url' => (new moodle_url($url, ['caseid' => $entry->id]))->out(false),
         ];
     }
@@ -146,7 +185,7 @@ if ($case) {
         );
         foreach ($cases as $entry) {
             if (!$entry->cmid || isset($activities[$entry->cmid])) {
-                $existing[$entry->userid][$entry->cmid][$entry->reason] = true;
+                $existing[$entry->userid][$entry->cmid][$entry->reason] ??= $entry;
                 $byuser[$entry->userid][] = [
                     'name' => $label('followupstate_' . $entry->reason) . ' · ' . $label('followupstatus_' . $entry->status),
                     'url' => (new moodle_url($url, ['caseid' => $entry->id]))->out(false),
@@ -167,7 +206,10 @@ if ($case) {
             'state' => $label('followupstate_' . $result['state']),
             'due' => $result['due'] ? userdate($result['due']) : '',
             'canopen' => in_array($result['state'], ['inactive', 'late', 'grading'], true)
-                && empty($existing[$userid][$cmid][$result['state']]),
+                && $service->is_new_episode(
+                    $existing[$userid][$cmid][$result['state']] ?? null,
+                    $cmid ? ($result['since'] ?? $result['due']) : $service->last_access($course->id, $userid),
+                ),
             'cases' => $byuser[$userid] ?? [],
         ];
     }
@@ -193,7 +235,7 @@ echo $OUTPUT->render_from_template('local_moodlexhub/followup', [
     'queued' => $queued,
     'views' => array_map(
         fn(string $item): array => ['id' => $item, 'name' => $label('followupview_' . $item), 'selected' => $item === $view],
-        ['evidence', 'open', 'closed'],
+        $views,
     ),
     'hasrows' => (bool) $rows,
     'overview' => !$caseid,

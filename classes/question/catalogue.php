@@ -84,9 +84,11 @@ final class catalogue {
      * @param array $filters Search, bank, category, author and question type.
      * @param int $offset Page offset.
      * @param int $limit Page size.
+     * @param int $compareid Question bank entry to compare, or zero.
+     * @param int $comparepage Batch of candidate questions to compare.
      * @return array
      */
-    public function search(array $scope, array $filters, int $offset, int $limit): array {
+    public function search(array $scope, array $filters, int $offset, int $limit, int $compareid = 0, int $comparepage = 0): array {
         global $DB, $USER;
 
         $clauses = [];
@@ -102,7 +104,7 @@ final class catalogue {
             $params += $p + ['ownauthor' => $USER->id];
         }
         if (!$clauses) {
-            return ['total' => 0, 'rows' => [], 'categories' => [], 'types' => [], 'authors' => []];
+            return ['total' => 0, 'rows' => [], 'categories' => [], 'types' => [], 'authors' => [], 'comparison' => null];
         }
         $base = ' FROM {question_bank_entries} e
                   JOIN {question_categories} qc ON qc.id = e.questioncategoryid
@@ -159,7 +161,7 @@ final class catalogue {
         }
         $rows = [];
         foreach ($items as $item) {
-            $rows[] = ['cells' => [
+            $rows[] = ['entryid' => $item->id, 'cells' => [
                 $item->name,
                 $this->type_name($item->qtype),
                 $item->category,
@@ -172,6 +174,7 @@ final class catalogue {
         }
         return [
             'total' => $total,
+            'comparison' => $compareid ? $this->compare($scope, $base, $params, $compareid, $comparepage) : null,
             'rows' => $rows,
             'categories' => $DB->get_records_sql_menu('SELECT DISTINCT qc.id, qc.name' . $base . ' ORDER BY qc.name ASC', $params),
             'types' => $DB->get_fieldset_sql('SELECT DISTINCT q.qtype' . $base . ' ORDER BY q.qtype ASC', $params),
@@ -181,6 +184,99 @@ final class catalogue {
                 $params,
             ),
         ];
+    }
+
+    /**
+     * Compare the latest permitted question versions in bounded batches.
+     *
+     * @param array $scope Authorized bank scope.
+     * @param string $base Fixed Moodle DML joins and scope.
+     * @param array $params SQL parameters.
+     * @param int $id Entry to compare.
+     * @param int $page Candidate batch.
+     * @return array
+     */
+    private function compare(array $scope, string $base, array $params, int $id, int $page): array {
+        global $CFG, $DB;
+        require_once($CFG->libdir . '/questionlib.php');
+        $fields = 'SELECT e.id, q.id AS questionid, q.name, q.qtype, q.questiontext, qc.contextid';
+        $focus = $DB->get_record_sql($fields . $base . ' AND e.id = :focus', $params + ['focus' => $id], MUST_EXIST);
+        $candidates = $DB->get_records_sql(
+            $fields . $base . ' AND e.id <> :focus ORDER BY e.id',
+            $params + ['focus' => $id],
+            $page * 200,
+            201,
+        );
+        $more = count($candidates) > 200;
+        if ($more) {
+            array_pop($candidates);
+        }
+        $choiceids = [];
+        if ($focus->qtype === 'multichoice') {
+            $choiceids = [$focus->questionid];
+            foreach ($candidates as $candidate) {
+                if ($candidate->qtype === 'multichoice') {
+                    $choiceids[] = $candidate->questionid;
+                }
+            }
+        }
+        $options = [];
+        if ($choiceids) {
+            [$insql, $choiceparams] = $DB->get_in_or_equal($choiceids);
+            $answers = $DB->get_records_select('question_answers', "question $insql", $choiceparams, 'id', 'id,question,answer');
+            foreach ($answers as $answer) {
+                $normal = $this->normalise($answer->answer);
+                if ($normal !== '') {
+                    $options[$answer->question][] = $normal;
+                }
+            }
+            foreach ($options as &$values) {
+                sort($values, SORT_STRING);
+            }
+            unset($values);
+        }
+        $stem = $this->normalise($focus->questiontext);
+        $words = array_unique(explode(' ', $stem));
+        $choices = $options[$focus->questionid] ?? [];
+        $matches = [];
+        $canpreview = \core\plugininfo\qbank::is_plugin_enabled('qbank_previewquestion');
+        foreach ($candidates as $candidate) {
+            $candidateprompt = $this->normalise($candidate->questiontext);
+            $other = array_unique(explode(' ', $candidateprompt));
+            $exact = $stem !== '' && $stem === $candidateprompt;
+            $similar = min(count($words), count($other)) >= 5
+                && count(array_intersect($words, $other)) / count(array_unique(array_merge($words, $other))) >= 0.8;
+            $samechoices = count(array_unique($choices)) >= 2 && $choices === ($options[$candidate->questionid] ?? []);
+            if (!$exact && !$similar && !(count(array_unique($choices)) >= 3 && $samechoices)) {
+                continue;
+            }
+            $url = '';
+            if ($canpreview && question_has_capability_on($candidate->questionid, 'use')) {
+                $url = \qbank_previewquestion\helper::question_preview_url(
+                    $candidate->questionid,
+                    context: \context::instance_by_id($candidate->contextid),
+                )->out(false);
+            }
+            $matches[] = [
+                'name' => $candidate->name,
+                'bank' => $scope['labels'][$candidate->contextid],
+                'exact' => $exact,
+                'similar' => !$exact && $similar,
+                'options' => $samechoices,
+                'url' => $url,
+            ];
+        }
+        return ['name' => $focus->name, 'matches' => $matches, 'more' => $more];
+    }
+
+    /**
+     * Convert question and answer HTML into a comparable word sequence.
+     *
+     * @param string $text Question or answer text.
+     * @return string
+     */
+    private function normalise(string $text): string {
+        return trim(preg_replace('/[^\p{L}\p{N}]+/u', ' ', \core_text::strtolower(html_to_text($text, 0, false))));
     }
 
     /**

@@ -1,0 +1,32 @@
+{{!
+    @template local_moodlexhub/quality_template
+
+    Example context (json):
+    {"category": "Humanities", "action": "/local/moodlexhub/quality_template.php?category=2"}
+}}
+<div class="moodlexhub">
+    <p><a href="{{home}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a></p>
+    <h2>{{category}}</h2>
+    <p>{{#str}} qualitytemplatehelp, local_moodlexhub {{/str}}</p>
+    {{#own}}<p>{{#str}} qualitytemplateactive, local_moodlexhub {{/str}}</p>{{/own}}
+    {{^own}}<p>{{#str}} qualitytemplateinherited, local_moodlexhub {{/str}}</p>{{/own}}
+    <form action="{{action}}" method="post">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+        <div class="moodlexhub-filters">
+            {{#rules}}
+                <div>
+                    <label for="hub-weight-{{rule}}">{{label}}</label>
+                    <select class="form-select" name="weights[{{rule}}]" id="hub-weight-{{rule}}">
+                        {{#choices}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{value}}</option>{{/choices}}
+                    </select>
+                </div>
+            {{/rules}}
+        </div>
+        <button class="btn btn-primary" type="submit">{{#str}} savechanges {{/str}}</button>
+        {{#own}}
+            <button class="btn btn-outline-secondary" type="submit" name="inherit" value="1">
+                {{#str}} qualitytemplateinherit, local_moodlexhub {{/str}}
+            </button>
+        {{/own}}
+    </form>
+</div>

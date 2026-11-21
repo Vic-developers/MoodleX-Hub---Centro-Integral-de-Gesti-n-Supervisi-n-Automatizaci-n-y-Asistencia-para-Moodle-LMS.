@@ -1,0 +1,47 @@
+{{!
+    @template local_moodlexhub/setup_wizard
+
+    Example context (json):
+    {"home": "/local/moodlexhub/index.php", "steps": []}
+}}
+<div class="moodlexhub">
+    <p><a href="{{home}}">{{#str}} pluginname, local_moodlexhub {{/str}}</a></p>
+    <nav aria-label="{{#str}} setupwizard, local_moodlexhub {{/str}}" class="moodlexhub-actions">
+        {{#steps}}
+            <a class="btn btn-outline-secondary" href="{{url}}" {{#selected}}aria-current="step"{{/selected}}>{{name}}</a>
+        {{/steps}}
+    </nav>
+    {{#roles}}
+        <section class="moodlexhub-panel">
+            <h2>{{#str}} setupwizardroles, local_moodlexhub {{/str}}</h2>
+            <p>{{#str}} setuproleshelp, local_moodlexhub {{/str}}</p>
+            {{#roleurl}}<p><a href="{{.}}">{{#str}} setupopenroles, local_moodlexhub {{/str}}</a></p>{{/roleurl}}
+            <ul>{{#rolechecks}}<li>{{name}} · {{status}}</li>{{/rolechecks}}</ul>
+            <a class="btn btn-primary" href="{{next}}">{{#str}} continue {{/str}}</a>
+        </section>
+    {{/roles}}
+    {{#cron}}
+        <section class="moodlexhub-panel">
+            <h2>{{#str}} setupwizardcron, local_moodlexhub {{/str}}</h2>
+            <p>{{cronresult}}</p>
+            {{#taskurl}}<p><a href="{{.}}">{{#str}} setupopentasks, local_moodlexhub {{/str}}</a></p>{{/taskurl}}
+            <a class="btn btn-primary" href="{{next}}">{{#str}} continue {{/str}}</a>
+        </section>
+    {{/cron}}
+    {{#modules}}
+        <section class="moodlexhub-panel">
+            <h2>{{#str}} setupwizardmodules, local_moodlexhub {{/str}}</h2>
+            <p>{{#str}} setupprofilehelp, local_moodlexhub {{/str}}</p>
+            <form method="post" action="{{action}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <label for="hub-setup-profile">{{#str}} setupprofile, local_moodlexhub {{/str}}</label>
+                <select class="form-select" id="hub-setup-profile" name="profile">
+                    {{#profiles}}<option value="{{value}}">{{label}}</option>{{/profiles}}
+                </select>
+                <button class="btn btn-primary mt-2" type="submit">{{#str}} setupapplyprofile, local_moodlexhub {{/str}}</button>
+            </form>
+            <ul class="mt-3">{{#modulechecks}}<li>{{name}} · {{status}}</li>{{/modulechecks}}</ul>
+            <p><a href="{{moduleurl}}">{{#str}} modulesettings, local_moodlexhub {{/str}}</a></p>
+        </section>
+    {{/modules}}
+</div>

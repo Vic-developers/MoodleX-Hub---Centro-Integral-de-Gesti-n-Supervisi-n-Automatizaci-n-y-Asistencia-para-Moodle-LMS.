@@ -54,4 +54,36 @@ final class questions_test extends advanced_testcase {
         $this->assertSame(2, $service->search($service->scope($course), $filters + ['status' => 'ready'], 0, 20)['total']);
         $this->assertSame(0, $service->search($service->scope($course), $filters + ['status' => 'draft'], 0, 20)['total']);
     }
+
+    /**
+     * Matching stems and choices are detected across differently named accessible questions.
+     */
+    public function test_question_content_comparison_respects_bank_scope(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $bank = $generator->create_module('qbank', ['course' => $course->id]);
+        $outside = $generator->create_module('qbank', ['course' => $generator->create_course()->id]);
+        $questions = $generator->get_plugin_generator('core_question');
+        $category = $questions->create_question_category(['contextid' => context_module::instance($bank->cmid)->id]);
+        $hidden = $questions->create_question_category(['contextid' => context_module::instance($outside->cmid)->id]);
+        $prompt = '<p>Which element belongs to this family?</p>';
+        foreach (['Reference', 'Renamed entry', 'Another course'] as $name) {
+            $questions->create_question('multichoice', null, [
+                'category' => $name === 'Another course' ? $hidden->id : $category->id,
+                'name' => $name,
+                'questiontext' => ['text' => $prompt, 'format' => FORMAT_HTML],
+            ]);
+        }
+        $service = new catalogue();
+        $scope = $service->scope($course);
+        $filters = ['search' => 'Reference'];
+        $page = $service->search($scope, $filters, 0, 10);
+        $study = $service->search($scope, $filters, 0, 10, $page['rows'][0]['entryid'])['comparison'];
+        $this->assertSame(['Renamed entry'], array_column($study['matches'], 'name'));
+        $this->assertTrue($study['matches'][0]['exact']);
+        $this->assertTrue($study['matches'][0]['options']);
+        $this->assertStringContainsString('/question/bank/previewquestion/preview.php', $study['matches'][0]['url']);
+    }
 }

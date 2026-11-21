@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.0-beta.5
+
+- Coordinación de casos, fecha de revisión, bandejas de trabajo y recordatorios configurables.
+- Mensajes revisados al estudiante desde el caso y nuevas incidencias basadas en evidencia posterior al cierre.
+- Plantillas de auditoría heredables por categoría y asistente de configuración inicial.
+- Comparación de enunciados y opciones de selección múltiple en bancos autorizados.
+
 ## 0.1.0-beta.4
 
 - Añade seguimiento académico por curso y grupo con revisión de acceso reciente, Tareas, cuestionarios y finalización de foros.

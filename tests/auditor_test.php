@@ -26,6 +26,7 @@ namespace local_moodlexhub;
 
 use advanced_testcase;
 use local_moodlexhub\quality\auditor;
+use local_moodlexhub\quality\category_template;
 use required_capability_exception;
 
 /**
@@ -52,8 +53,8 @@ final class auditor_test extends advanced_testcase {
         $this->assertEquals($USER->id, $audit->userid);
         $this->assertEquals(0, $audit->score);
         $this->assertSame([
-            ['rule' => 'coursedescription', 'weight' => 3, 'count' => 1],
-            ['rule' => 'coursedates', 'weight' => 2, 'count' => null],
+            ['rule' => 'coursedescription', 'weight' => 3, 'count' => 1, 'template' => 0],
+            ['rule' => 'coursedates', 'weight' => 2, 'count' => null, 'template' => 0],
         ], json_decode($audit->findings, true, flags: JSON_THROW_ON_ERROR));
     }
 
@@ -70,5 +71,33 @@ final class auditor_test extends advanced_testcase {
 
         $this->expectException(required_capability_exception::class);
         (new auditor())->run($course);
+    }
+
+    /**
+     * Category templates inherit, override and affect persisted audit results.
+     */
+    public function test_category_template_controls_child_course_audits(): void {
+        global $DB;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $generator = $this->getDataGenerator();
+        $parent = $generator->create_category();
+        $child = $generator->create_category(['parent' => $parent->id]);
+        $course = $generator->create_course(['category' => $child->id, 'summary' => '']);
+        $service = new category_template();
+        $weights = array_fill_keys(array_keys(auditor::WEIGHTS), 0);
+        $weights['coursedescription'] = 2;
+        $service->save($parent->id, $weights);
+        $this->assertSame((int) $parent->id, $service->resolve($child->id)['category']);
+        $id = (new auditor())->run($course);
+        $findings = $DB->get_field(auditor::TABLE, 'findings', ['id' => $id], MUST_EXIST);
+        $this->assertSame([[
+            'rule' => 'coursedescription', 'weight' => 2, 'count' => 1, 'template' => (int) $parent->id,
+        ]], json_decode($findings, true, flags: JSON_THROW_ON_ERROR));
+        $weights['coursedescription'] = 3;
+        $service->save($child->id, $weights);
+        $this->assertSame($weights, $service->resolve($child->id)['weights']);
+        $service->save($child->id, null);
+        $this->assertSame(2, $service->resolve($child->id)['weights']['coursedescription']);
     }
 }

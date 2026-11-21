@@ -45,6 +45,7 @@
                         <li class="list-group-item">
                             <a href="{{url}}">{{name}} · {{activity}}</a>
                             <div>{{reason}} · {{time}}</div>
+                            {{#review}}<div>{{#str}} followupreviewdate, local_moodlexhub {{/str}} · {{review}}</div>{{/review}}
                         </li>
                     {{/queued}}
                 </ul>
@@ -94,6 +95,36 @@
             <h2>{{learner}}</h2>
             <p>{{reason}} · {{status}}{{#activity}} · <a href="{{activityurl}}">{{activity}}</a>{{/activity}}</p>
             <p>{{#str}} followupassignee, local_moodlexhub {{/str}} · {{assignee}}</p>
+            {{#reviewlabel}}<p>{{#str}} followupreviewdate, local_moodlexhub {{/str}} · {{reviewlabel}}</p>{{/reviewlabel}}
+            {{#canassign}}
+                <form action="{{posturl}}" method="post" class="moodlexhub-actions">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="caseid" value="{{id}}">
+                    <div>
+                        <label for="hub-follow-assignee">{{#str}} followupassignee, local_moodlexhub {{/str}}</label>
+                        <select class="form-select" id="hub-follow-assignee" name="assignee">
+                            <option value="0">{{#str}} followupunassigned, local_moodlexhub {{/str}}</option>
+                            {{#candidates}}<option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/candidates}}
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-primary" type="submit" name="operation" value="assign">
+                        {{#str}} followupassign, local_moodlexhub {{/str}}
+                    </button>
+                </form>
+            {{/canassign}}
+            {{#canreview}}
+                <form action="{{posturl}}" method="post" class="moodlexhub-actions">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="caseid" value="{{id}}">
+                    <div>
+                        <label for="hub-follow-review">{{#str}} followupreviewdate, local_moodlexhub {{/str}}</label>
+                        <input class="form-control" type="date" id="hub-follow-review" name="reviewdate" value="{{reviewdate}}">
+                    </div>
+                    <button class="btn btn-outline-primary" type="submit" name="operation" value="review">
+                        {{#str}} followupreview, local_moodlexhub {{/str}}
+                    </button>
+                </form>
+            {{/canreview}}
             {{#cantake}}
                 <form action="{{posturl}}" method="post">
                     <input type="hidden" name="sesskey" value="{{sesskey}}">
@@ -112,6 +143,7 @@
                     </button>
                 </form>
             {{/canrelease}}
+            {{#caneditnote}}
             <form action="{{posturl}}" method="post" class="mt-3">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
                 <input type="hidden" name="caseid" value="{{id}}">
@@ -133,6 +165,22 @@
                     {{/open}}
                 </div>
             </form>
+            {{/caneditnote}}
+            {{#canmessage}}
+                <form action="{{posturl}}" method="post" class="mt-3">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="caseid" value="{{id}}">
+                    <label for="hub-follow-message">{{#str}} followuplearnermessage, local_moodlexhub {{/str}}</label>
+                    <textarea class="form-control" id="hub-follow-message" name="note" maxlength="2000" rows="4" required></textarea>
+                    <label class="form-check-label my-2">
+                        <input class="form-check-input" type="checkbox" name="confirmmessage" value="1" required>
+                        {{#str}} followupconfirmmessage, local_moodlexhub {{/str}}
+                    </label>
+                    <div><button class="btn btn-outline-primary" type="submit" name="operation" value="message">
+                        {{#str}} followupsend, local_moodlexhub {{/str}}
+                    </button></div>
+                </form>
+            {{/canmessage}}
         </section>
         <section class="moodlexhub-panel">
             <h2>{{#str}} monitorhistory, local_moodlexhub {{/str}}</h2>

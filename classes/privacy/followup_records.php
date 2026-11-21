@@ -43,7 +43,8 @@ final class followup_records {
      */
     public static function describe(collection $collection): void {
         $collection->add_database_table(followup::CASES, array_fill_keys(
-            ['courseid', 'userid', 'cmid', 'reason', 'status', 'assignee', 'timecreated', 'timemodified'],
+            ['courseid', 'userid', 'cmid', 'reason', 'status', 'assignee', 'occurrence', 'reviewdue', 'reminded',
+                'timecreated', 'timemodified'],
             'privacy:metadata:saved:content',
         ), 'followup');
         $collection->add_database_table(followup::HISTORY, array_fill_keys(
@@ -111,6 +112,9 @@ final class followup_records {
             foreach ($cases as $case) {
                 $learner = (int) $case->userid === $userid;
                 $data = ['modified' => transform::datetime($case->timemodified)];
+                if ($case->reviewdue) {
+                    $data['reviewdue'] = transform::datetime($case->reviewdue);
+                }
                 if ($learner) {
                     $data += [
                         'activity' => $case->cmid,

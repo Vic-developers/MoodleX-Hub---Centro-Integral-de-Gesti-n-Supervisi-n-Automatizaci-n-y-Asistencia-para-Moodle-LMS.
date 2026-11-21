@@ -68,9 +68,8 @@ final class auditor {
         $totalweight = 0;
         $passedweight = 0;
 
-        foreach (self::WEIGHTS as $rule => $default) {
-            $configured = get_config('local_moodlexhub', 'quality_' . $rule);
-            $weight = $configured === false ? $default : max(0, min(3, (int) $configured));
+        $template = (new category_template())->resolve($course->category);
+        foreach ($template['weights'] as $rule => $weight) {
             if (!$weight) {
                 continue;
             }
@@ -80,7 +79,7 @@ final class auditor {
                 $totalweight += $weight;
                 $passedweight += $count === 0 ? $weight : 0;
             }
-            $findings[] = ['rule' => $rule, 'weight' => $weight, 'count' => $count];
+            $findings[] = ['rule' => $rule, 'weight' => $weight, 'count' => $count, 'template' => $template['category']];
         }
 
         $transaction = $DB->start_delegated_transaction();

@@ -26,5 +26,30 @@
         <button type="submit" class="btn btn-primary">{{#str}} applyfilters, local_moodlexhub {{/str}}</button>
     </form>
     <p>{{#str}} questionmethod, local_moodlexhub {{/str}}</p>
+    {{#comparison}}
+        <section class="moodlexhub-panel" aria-labelledby="hub-question-comparison">
+            <h2 id="hub-question-comparison">{{#str}} questioncompareresults, local_moodlexhub {{/str}} · {{name}}</h2>
+            {{^matches}}<p>{{#str}} questioncomparenoresults, local_moodlexhub {{/str}}</p>{{/matches}}
+            <ul>{{#matches}}
+                <li>
+                    {{#url}}<a href="{{url}}">{{name}}</a>{{/url}}{{^url}}<span>{{name}}</span>{{/url}} · {{bank}}
+                    {{#exact}} · {{#str}} questioncompareexact, local_moodlexhub {{/str}}{{/exact}}
+                    {{#similar}} · {{#str}} questioncomparesimilar, local_moodlexhub {{/str}}{{/similar}}
+                    {{#options}} · {{#str}} questioncompareoptions, local_moodlexhub {{/str}}{{/options}}
+                </li>
+            {{/matches}}</ul>
+            <div class="moodlexhub-actions">
+                {{#previous}}<a href="{{.}}">{{#str}} questioncompareprev, local_moodlexhub {{/str}}</a>{{/previous}}
+                {{#next}}<a href="{{.}}">{{#str}} questioncomparenext, local_moodlexhub {{/str}}</a>{{/next}}
+            </div>
+        </section>
+    {{/comparison}}
     {{#report}}{{> local_moodlexhub/report_table }}{{/report}}
+    {{#hascomparelinks}}
+        <section class="moodlexhub-panel" aria-labelledby="hub-question-compare">
+            <h2 id="hub-question-compare">{{#str}} questioncompare, local_moodlexhub {{/str}}</h2>
+            <p>{{#str}} questioncomparehelp, local_moodlexhub {{/str}}</p>
+            <ul>{{#comparelinks}}<li><a href="{{url}}">{{name}}</a></li>{{/comparelinks}}</ul>
+        </section>
+    {{/hascomparelinks}}
 </div>

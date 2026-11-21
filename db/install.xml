@@ -372,6 +372,9 @@
         <FIELD NAME="reason" TYPE="char" LENGTH="16" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="status" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="open" SEQUENCE="false"/>
         <FIELD NAME="assignee" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="occurrence" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="reviewdue" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="reminded" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
@@ -382,7 +385,8 @@
         <KEY NAME="assignee" TYPE="foreign" FIELDS="assignee" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="evidence" UNIQUE="true" FIELDS="courseid, userid, cmid, reason"/>
+        <INDEX NAME="evidence-episode" UNIQUE="true" FIELDS="courseid, userid, cmid, reason, occurrence"/>
+        <INDEX NAME="review-queue" UNIQUE="false" FIELDS="status, reviewdue"/>
         <INDEX NAME="activity" UNIQUE="false" FIELDS="cmid"/>
       </INDEXES>
     </TABLE>
