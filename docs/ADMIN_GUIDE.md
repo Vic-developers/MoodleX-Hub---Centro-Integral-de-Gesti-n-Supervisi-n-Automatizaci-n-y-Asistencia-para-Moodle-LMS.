@@ -41,6 +41,6 @@ El prefijo de todas las capacidades de la tabla es `local/moodlexhub:`.
 
 Moodle cron procesa copias, importaciones, auditorías masivas, almacenamiento, notificaciones, generación de informes, reglas y webhooks. Supervisa el historial en **MoodleX Hub → Supervisión técnica** y la cola detallada en la administración de tareas nativa de Moodle.
 
-Activa los **Recordatorios de revisión académica** en los ajustes generales y elige la anticipación. La tarea comprueba los permisos del responsable y envía un aviso por fecha y asignación. El contenido del aviso es genérico y el enlace abre su bandeja autorizada.
+Los **Recordatorios de revisión académica** están desactivados al instalar. Puedes activarlos en los ajustes generales y elegir la anticipación. La tarea comprueba los permisos del responsable y envía un aviso por fecha y asignación. El contenido del aviso es genérico y el enlace abre su bandeja autorizada.
 
 Las reglas de calidad admiten pesos 1, 2 y 3. El valor 0 desactiva la regla. El plazo de retención configurado en esa página se aplica al historial de auditoría y a resultados históricos del plugin. Los metadatos de uso del asistente mantienen su retención de 90 días. Consulte [privacidad](PRIVACY.md) para tickets, notas y CSV.

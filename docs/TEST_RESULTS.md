@@ -49,8 +49,10 @@ La [matriz de GitHub Actions de la beta 4](https://github.com/Vic-developers/Moo
 
 ## Beta 5
 
-En Moodle 5.3.1 se actualizó desde la beta 4 y se comprobó el esquema. Pasaron 28 pruebas de PHPUnit y 9 escenarios de Behat con 103 pasos. Una comprobación dirigida de la comparación de preguntas verificó también que las coincidencias enlazan con la vista previa nativa autorizada.
+En Moodle 5.0.12, 5.1.9, 5.2.5 y 5.3.1 se actualizó desde la beta 4 y se comprobó el esquema instalado. En el laboratorio de 5.3.1 pasaron 28 pruebas de PHPUnit y 9 escenarios de Behat con 103 pasos. Las pruebas dirigidas verificaron también que las coincidencias enlazan con la vista previa nativa autorizada y que guardar la misma fecha o el mismo responsable conserva el registro del recordatorio enviado.
 
 Se verificaron la asignación y la fecha de revisión, las bandejas por estado, un recordatorio único y el mensaje dirigido al estudiante. El historial separa la comunicación de la nota interna. El caso repetido solo se abre a partir de evidencia posterior al cierre. Las comprobaciones de auditoría cubrieron herencia, criterios propios y restauración. El asistente completó su recorrido y activó un perfil.
+
+La [matriz definitiva de GitHub Actions de la beta 5](https://github.com/Vic-developers/MoodleX-Hub---Centro-Integral-de-Gesti-n-Supervisi-n-Automatizaci-n-y-Asistencia-para-Moodle-LMS./actions/runs/44943719995) confirmó la instalación limpia, el esquema y las suites PHPUnit y Behat en las cuatro ramas.
 
 Consulta los comandos en [TESTING.md](TESTING.md) y los criterios de distribución en [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
