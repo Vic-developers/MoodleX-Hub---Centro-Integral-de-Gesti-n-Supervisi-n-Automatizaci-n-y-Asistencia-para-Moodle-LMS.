@@ -352,6 +352,7 @@ $string['questionfield_category'] = 'Categoría';
 $string['questionfield_bank'] = 'Contexto del banco';
 $string['questionfield_author'] = 'Autor';
 $string['questionversion'] = 'Última versión';
+$string['questionfield_status'] = 'Estado de la versión';
 $string['questionuses'] = 'Referencias directas en cuestionarios autorizados';
 $string['questionduplicates'] = 'Otras entradas accesibles con el mismo título';
 $string['questionmethod'] = 'Esta vista muestra la última versión de cada entrada. Los títulos iguales indican posibles duplicados. El recuento incluye referencias directas de cuestionarios de este curso para los que tienes acceso a informes.';

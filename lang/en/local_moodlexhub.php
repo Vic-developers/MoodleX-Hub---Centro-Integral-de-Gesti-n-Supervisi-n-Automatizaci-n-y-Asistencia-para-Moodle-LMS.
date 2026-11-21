@@ -352,6 +352,7 @@ $string['questionfield_category'] = 'Category';
 $string['questionfield_bank'] = 'Bank context';
 $string['questionfield_author'] = 'Author';
 $string['questionversion'] = 'Latest version';
+$string['questionfield_status'] = 'Version status';
 $string['questionuses'] = 'Direct references in permitted quizzes';
 $string['questionduplicates'] = 'Other accessible entries with the same title';
 $string['questionmethod'] = 'This view shows the latest version of each question entry. Matching titles suggest possible duplicates. Reference counts include only direct references in quizzes you can report on in this course.';

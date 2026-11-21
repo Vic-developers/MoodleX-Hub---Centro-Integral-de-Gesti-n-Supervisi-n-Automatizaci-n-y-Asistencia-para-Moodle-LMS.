@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-beta.2
+
+- Filtro de estado de la versión en el diagnóstico del banco de preguntas.
+- Recorrido de aceptación dirigido al enlace de MoodleX Hub en cursos y comprobación del filtro.
+- Guía para la primera prueba en Moodle 5.3 y permisos por herramienta.
+
 ## 0.1.0-beta.1
 
 - Panel bilingüe, preferencias, notificaciones, navegación por permisos y búsquedas en el catálogo, ayuda y soporte.

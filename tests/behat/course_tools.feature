@@ -23,5 +23,6 @@ Feature: Use course diagnostics
     Then I should see "Gradebook history"
     When I visit "/local/moodlexhub/courses.php"
     And I follow "Course for audit"
-    And I click on "Question bank" "link" in the ".moodlexhub-actions" "css_element"
+    And I click on ".moodlexhub-actions a[href*='/local/moodlexhub/questions.php']" "css_element"
+    Then I should see "Version status"
     Then I should see "Matching titles suggest possible duplicates."

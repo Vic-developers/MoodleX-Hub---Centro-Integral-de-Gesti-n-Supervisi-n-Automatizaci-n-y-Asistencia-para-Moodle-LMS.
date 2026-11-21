@@ -51,5 +51,7 @@ final class questions_test extends advanced_testcase {
         $data = $service->search($service->scope($course), $filters, 0, 20);
         $this->assertSame(2, $data['total']);
         $this->assertSame([1, 1], array_map(static fn(array $row): int => $row['cells'][7], $data['rows']));
+        $this->assertSame(2, $service->search($service->scope($course), $filters + ['status' => 'ready'], 0, 20)['total']);
+        $this->assertSame(0, $service->search($service->scope($course), $filters + ['status' => 'draft'], 0, 20)['total']);
     }
 }

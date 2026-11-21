@@ -37,7 +37,11 @@ $filters = [
     'category' => optional_param('category', 0, PARAM_INT),
     'author' => optional_param('author', 0, PARAM_INT),
     'type' => optional_param('type', '', PARAM_ALPHANUMEXT),
+    'status' => optional_param('status', '', PARAM_ALPHA),
 ];
+if ($filters['status'] !== '' && !in_array($filters['status'], catalogue::STATUSES, true)) {
+    throw new invalid_parameter_exception();
+}
 $page = max(0, min(intdiv(PHP_INT_MAX, 30), optional_param('page', 0, PARAM_INT)));
 $path = '/local/moodlexhub/questions.php';
 $url = new moodle_url($path, ['id' => $course->id] + $filters);
@@ -58,6 +62,10 @@ $authoroptions = [];
 foreach ($result['authors'] as $author) {
     $authoroptions[$author->id] = trim(($author->firstname ?? '') . ' ' . ($author->lastname ?? ''));
 }
+$statusoptions = [];
+foreach (catalogue::STATUSES as $status) {
+    $statusoptions[$status] = $label('questionstate_' . $status);
+}
 $selectors = [];
 foreach (
     [
@@ -65,6 +73,7 @@ foreach (
     'category' => $result['categories'],
     'author' => $authoroptions,
     'type' => $typeoptions,
+    'status' => $statusoptions,
     ] as $filter => $values
 ) {
     $options = [['value' => '', 'name' => $label('questionany'), 'selected' => !$filters[$filter]]];

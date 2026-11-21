@@ -33,3 +33,12 @@ Las rutas de la tabla siguiente se aplican a las cuatro versiones. Los enlaces a
 | Informes | MoodleX Hub → **Informes** | Crea una definición con origen, alcance, filtros y programación. Genera, abre el historial y exporta en CSV, Excel o PDF según los formatos disponibles en Moodle. La ejecución registra fecha, filtros y metodología. |
 
 Consulta [los resultados de pruebas](TEST_RESULTS.md) para saber qué flujos se ejecutaron y en qué versión se comprobaron.
+
+## Primera prueba en Moodle 5.3
+
+1. Instala el ZIP y abre el panel como administrador. En **Cursos**, abre un curso de prueba con una Tarea y dos estudiantes matriculados.
+2. Desde la ficha del curso, ejecuta la auditoría de calidad, guarda un resumen del diagnóstico de calificaciones y solicita un análisis de almacenamiento. Una vez que cron procese la cola, vuelve al historial de almacenamiento.
+3. En una sesión de estudiante, abre **Mi planificador**. Comprueba las fechas, crea una nota privada y añade un favorito. En **Ayuda y soporte**, crea un ticket. Desde la sesión administrativa, asígnalo a una cuenta de soporte y comprueba el historial.
+4. Para comprobar los informes, crea uno de calificaciones en **Informes**, genera una ejecución y abre el historial después de que cron la procese. Descarga el resultado en uno de los formatos habilitados en Moodle.
+
+El asistente y las integraciones tienen su propia configuración. Para reproducir la prueba del asistente en 5.3, consulta [el proveedor local y su política](AI_INTEGRATION.md).

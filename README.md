@@ -2,7 +2,7 @@
 
 Plugin local de Moodle para administración de cursos y usuarios, gestión académica, soporte, supervisión y automatización. Componente `local_moodlexhub`. Disponible en español e inglés bajo GPL-3.0-or-later.
 
-La versión `0.1.0-beta.1` está destinada a pruebas en un sitio independiente. Empieza por la [guía de prueba para Moodle 5.3](docs/INSTALLATION.md) y consulta la [evidencia disponible](docs/TEST_RESULTS.md).
+La versión `0.1.0-beta.2` está destinada a pruebas en un sitio independiente. Empieza por la [guía de prueba para Moodle 5.3](docs/INSTALLATION.md) y consulta la [evidencia disponible](docs/TEST_RESULTS.md).
 
 ## Instalar y abrir
 

@@ -31,6 +31,8 @@ use stdClass;
  * Inspect the latest versions of questions within the actor's authorized banks.
  */
 final class catalogue {
+    /** @var string[] Moodle question version states supported by this catalogue. */
+    public const STATUSES = ['ready', 'draft', 'hidden'];
     /** @var string Moodle capability required for this operation. */
     public const CAPABILITY = 'local/moodlexhub:viewquestions';
 
@@ -111,7 +113,14 @@ final class catalogue {
                    AND v.version = (SELECT MAX(lv.version) FROM {question_versions} lv WHERE lv.questionbankentryid = e.id)';
         $filtered = $base;
         $selectedparams = $params;
-        foreach (['bank' => 'qc.contextid', 'category' => 'qc.id', 'author' => 'q.createdby', 'type' => 'q.qtype'] as $key => $field) {
+        $columns = [
+            'bank' => 'qc.contextid',
+            'category' => 'qc.id',
+            'author' => 'q.createdby',
+            'type' => 'q.qtype',
+            'status' => 'v.status',
+        ];
+        foreach ($columns as $key => $field) {
             if (!empty($filters[$key])) {
                 $filtered .= " AND $field = :filter$key";
                 $selectedparams['filter' . $key] = $filters[$key];
